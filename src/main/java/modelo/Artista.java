@@ -21,7 +21,7 @@ public abstract class Artista {
 
     //constructor para recuperar un artista
 
-    public Artista(int id, String nombre, String pais EstadoArtista estado) {
+    public Artista(int id, String nombre, String pais, EstadoArtista estado) {
         validarId(id);//hago llamada al metodo validarId
         this.id = id;
         setNombre(nombre);
