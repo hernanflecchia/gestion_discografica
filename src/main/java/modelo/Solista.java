@@ -51,3 +51,9 @@ public class Solista extends Artista{
                 "| " + super.toString();
     }
 }
+
+//OBSERVACIONES
+//sin dudas en cuanto a esta clase
+//lo mismo que en la clase abstracta, nno genere this.nombreReal desde el constructor
+// en constructor puse setNombreReal(nombreReal) pero en los setters hice validacion por nombre nulo,
+//o vacio o con espacios con manejo excepcion IllegalArgumentException
