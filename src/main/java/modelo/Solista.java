@@ -50,6 +50,11 @@ public class Solista extends Artista{
                 "\nNombreReal: " + nombreReal + '\'' +
                 "| " + super.toString();
     }
+
+    @Override
+    public void setId(int id) {
+
+    }
 }
 
 //OBSERVACIONES

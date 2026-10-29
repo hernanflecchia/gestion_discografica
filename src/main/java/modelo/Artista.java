@@ -1,8 +1,9 @@
 package modelo;
 
 import enums.EstadoArtista;
+import interfaces.Identificable;
 
-public abstract class Artista {
+public abstract class Artista implements Identificable {
 
     private  int id;
     private String nombre;
@@ -10,7 +11,7 @@ public abstract class Artista {
     private EstadoArtista estado;
 
     //constructor para nuevo artista
-    //No genero ID (deberia ser generado al guardarse en la Base de Datos?)
+    //No genero ID, queda en 0 (deberia ser generado al guardarse en la Base de Datos?)
 
     public Artista(String nombre, String pais) {
 
@@ -19,7 +20,7 @@ public abstract class Artista {
         this.estado = EstadoArtista.ACTIVO;
     }
 
-    //constructor para recuperar un artista
+    //constructor para recuperar un artista existente en based de datos
 
     public Artista(int id, String nombre, String pais, EstadoArtista estado) {
         validarId(id);//hago llamada al metodo validarId
@@ -53,12 +54,12 @@ public abstract class Artista {
 
     //Setter del nombre con validacion (nombre vacio o carga de espacios)
     public void setNombre(String nombre) {
-        if (nombre == null || pais.trim().isEmpty()) {
+        if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException(
                     "El nombre no puede estar vacio."
             );
         }
-        this.nombre = nombre;
+        this.nombre = nombre.trim();
     }
 
     //Setter pais con validacion
@@ -69,7 +70,7 @@ public abstract class Artista {
                     "El pais no puede estar vacio."
             );
         }
-        this.pais = pais;
+        this.pais = pais.trim();
     }
 
 
@@ -85,7 +86,16 @@ public abstract class Artista {
         this.estado = estado;
     }
 
-    //Asigna el ID generado por la Base de Datos. Hernan deberia recuperar ID en ArtistaDAO
+    // Implementación del metodo setId de Idntificable
+    // El ID solamente puede asignarse una vez.
+
+    @Override
+    public void setId(int id) {
+        asignarId(id);
+    }
+
+    // Asigna el ID generado por la Base de Datos.
+
     public void asignarId(int id) {
         if (this.id != 0) {
             throw new IllegalStateException(
@@ -96,6 +106,8 @@ public abstract class Artista {
         validarId(id);
         this.id = id;
     }
+
+    
 
     //metodos
     //Validacion del ID
@@ -117,8 +129,8 @@ public abstract class Artista {
     public String toString() {
         return "Artista: " +
                 "\nID: " + id +
-                "\nNombre: " + nombre + '\'' +
-                "\nPais: " + pais + '\'' +
+                "\nNombre: " + nombre +
+                "\nPais: " + pais +
                 "\nEstado: " + estado +
                 '|'+ descripcion();
     }
@@ -131,26 +143,7 @@ public abstract class Artista {
 //se genera ahi. Al crear un nuevo Artista el ID queda temporalmente en 0; al recuperarlo de la base de daros
 // el constructor recibe el ID existente y se asigna mediante asignarId() para la persistencia
 
-//Segun chatgpt un codigo similar a este deberia estar en artistaDAO para asignar ID a artista
 
-// String sql =
-//    "INSERT INTO artistas (nombre, estado) VALUES (?, ?)";
-//
-//try (PreparedStatement ps = conexion.prepareStatement(
-//        sql, Statement.RETURN_GENERATED_KEYS)) {
-//
-//    ps.setString(1, artista.getNombre());
-//    ps.setString(2, artista.getEstado().name());
-//
-//    ps.executeUpdate();
-//
-//    try (ResultSet rs = ps.getGeneratedKeys()) {
-//        if (rs.next()) {
-//            int idGenerado = rs.getInt(1);
-//            artista.asignarId(idGenerado);
-//        }
-//    }
-//}
 
 
 }

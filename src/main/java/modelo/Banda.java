@@ -62,6 +62,11 @@ public class Banda extends  Artista{
                 "\n Integrantes: " + integrantes +
                 "| " + super.toString();
     }
+
+    @Override
+    public void setId(int id) {
+
+    }
 }
 
 //OBSERVACIONES
