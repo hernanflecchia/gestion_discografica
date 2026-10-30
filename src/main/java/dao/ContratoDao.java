@@ -1,12 +1,12 @@
 package dao;
 
-import interfaces.Repositorio;
+import interfaces.Dao;
 import modelo.Contrato;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ContratoDao implements Repositorio<Contrato> {
+public class ContratoDao implements Dao<Contrato> {
     @Override
     public void agregar(Contrato entidad) throws SQLException {
 
