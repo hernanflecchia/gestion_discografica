@@ -1,7 +1,7 @@
 package interfaces;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.SQLException;
 
 public interface Repositorio<T> {
     void agregar(T entidad) throws SQLException;
@@ -9,4 +9,5 @@ public interface Repositorio<T> {
     void modificar(T entidad) throws SQLException;
     T buscar(int id) throws SQLException;
     ArrayList<T> buscarTodos();
+
 }
