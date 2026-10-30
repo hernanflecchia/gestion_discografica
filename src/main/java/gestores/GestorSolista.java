@@ -1,7 +1,6 @@
 package gestores;
 
-import interfaces.Identificable;
-import interfaces.Repositorio;
+import interfaces.Dao;
 import modelo.Solista;
 
 import java.sql.SQLException;
@@ -9,7 +8,7 @@ import java.sql.SQLException;
 public class GestorSolista extends Gestor<Solista> {
 
 
-    protected GestorSolista(Repositorio<Solista> repositorio) {
+    protected GestorSolista(Dao<Solista> repositorio) {
         super(repositorio);
     }
 

@@ -1,12 +1,12 @@
 package gestores;
 
-import interfaces.Repositorio;
+import interfaces.Dao;
 import modelo.Single;
 
 import java.sql.SQLException;
 
 public class GestorSingle extends Gestor<Single> {
-    protected GestorSingle(Repositorio<Single> repositorio) {
+    protected GestorSingle(Dao<Single> repositorio) {
         super(repositorio);
     }
 

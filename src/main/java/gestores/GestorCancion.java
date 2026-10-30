@@ -1,12 +1,12 @@
 package gestores;
 
-import interfaces.Repositorio;
+import interfaces.Dao;
 import modelo.Cancion;
 
 import java.sql.SQLException;
 
 public class GestorCancion extends Gestor<Cancion> {
-    protected GestorCancion(Repositorio<Cancion> repositorio) {
+    protected GestorCancion(Dao<Cancion> repositorio) {
         super(repositorio);
     }
 

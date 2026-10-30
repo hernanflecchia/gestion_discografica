@@ -1,15 +1,15 @@
 package gestores;
 
 import interfaces.Identificable;
-import interfaces.Repositorio;
+import interfaces.Dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public abstract class Gestor<T extends Identificable> {
-    protected  final Repositorio<T> repositorio;
+    protected  final Dao<T> repositorio;
 
-    protected Gestor(Repositorio<T> repositorio) {
+    protected Gestor(Dao<T> repositorio) {
         this.repositorio = repositorio;
     }
 
