@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class LanzamientoDao implements Dao<Lanzamiento> {
     @Override
     public void agregar(Lanzamiento entidad) throws SQLException {
-        
+
     }
 
     @Override

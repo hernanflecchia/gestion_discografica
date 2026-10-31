@@ -6,9 +6,10 @@ import modelo.Artista;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ArtistaDao implements Dao {
+public class ArtistaDao implements Dao<Artista> {
+
     @Override
-    public void agregar(Object entidad) throws SQLException {
+    public void agregar(Artista entidad) throws SQLException {
 
     }
 
@@ -18,12 +19,12 @@ public class ArtistaDao implements Dao {
     }
 
     @Override
-    public void modificar(Object entidad) throws SQLException {
+    public void modificar(Artista entidad) throws SQLException {
 
     }
 
     @Override
-    public Object buscar(int id) throws SQLException {
+    public Artista buscar(int id) throws SQLException {
         return null;
     }
 
