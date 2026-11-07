@@ -6,7 +6,7 @@ import modelo.Lanzamiento;
 import java.sql.SQLException;
 
 public class GestorLanzamiento extends Gestor<Lanzamiento> {
-    protected GestorLanzamiento(Dao<Lanzamiento> repositorio) {
+    public GestorLanzamiento(Dao<Lanzamiento> repositorio) {
         super(repositorio);
     }
 

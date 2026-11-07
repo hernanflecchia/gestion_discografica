@@ -1,17 +1,17 @@
 package gestores;
 
 import interfaces.Dao;
-import modelo.Contrato;
+import modelo.Artista;
 
 import java.sql.SQLException;
 
-public class GestorArtista extends Gestor<Contrato> {
-    protected GestorArtista(Dao<Contrato> repositorio) {
+public class GestorArtista extends Gestor<Artista> {
+    public GestorArtista(Dao<Artista> repositorio) {
         super(repositorio);
     }
 
     @Override
-    protected void validar(Contrato entidad) throws SQLException {
+    protected void validar(Artista entidad) throws SQLException {
 
     }
 }
