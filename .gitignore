@@ -28,3 +28,7 @@ replay_pid*
 
 # Archivos personales (no se suben)
 mis_datos/
+
+# Salida de compilacion
+target/
+out/
