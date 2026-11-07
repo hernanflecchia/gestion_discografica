@@ -1,6 +1,7 @@
 package modelo;
 
 import enums.EstadoArtista;
+import enums.TipoArtista;
 import interfaces.Identificable;
 
 public abstract class Artista implements Identificable {
@@ -9,6 +10,8 @@ public abstract class Artista implements Identificable {
     private String nombre;
     private String pais;
     private EstadoArtista estado;
+
+    public abstract TipoArtista getTipo();
 
     //constructor para nuevo artista
     //No genero ID, queda en 0 (deberia ser generado al guardarse en la Base de Datos?)

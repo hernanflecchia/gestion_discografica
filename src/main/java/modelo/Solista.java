@@ -1,6 +1,7 @@
 package modelo;
 
 import enums.EstadoArtista;
+import enums.TipoArtista;
 
 public class Solista extends Artista{
 
@@ -43,6 +44,8 @@ public class Solista extends Artista{
 
     //to string
 
+    @Override
+    public TipoArtista getTipo() { return TipoArtista.SOLISTA; }
 
     @Override
     public String toString() {
@@ -57,7 +60,7 @@ public class Solista extends Artista{
     }
 }
 
-conflicts//OBSERVACIONES
+//OBSERVACIONES
 //sin dudas en cuanto a esta clase
 //lo mismo que en la clase abstracta, nno genere this.nombreReal desde el constructor
 // en constructor puse setNombreReal(nombreReal) pero en los setters hice validacion por nombre nulo,

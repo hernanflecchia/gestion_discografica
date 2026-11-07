@@ -6,7 +6,7 @@ import modelo.Contrato;
 import java.sql.SQLException;
 
 public class GestorContrato extends Gestor<Contrato> {
-    protected GestorContrato(Dao<Contrato> repositorio) {
+    public GestorContrato(Dao<Contrato> repositorio) {
         super(repositorio);
     }
 
