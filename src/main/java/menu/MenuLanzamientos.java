@@ -8,6 +8,11 @@ public class MenuLanzamientos extends Menu{
     }
 
     @Override
+    protected boolean pausarDespuesDeEjecutar() {
+        return false;
+    }
+
+    @Override
     protected String titulo() {
         return "Menu Lanzamientos";
     }

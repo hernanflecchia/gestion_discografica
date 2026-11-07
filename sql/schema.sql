@@ -2,8 +2,8 @@ CREATE DATABASE IF NOT EXISTS discografica;
 
 USE discografica;
 
-CREATE USER IF NOT EXISTS 'disco_admin'@'localhost' IDENTIFIED BY 'd1sc04dm1n!';
-GRANT ALL PRIVILEGES ON discografica.* TO 'disco_admin'@'localhost';
+CREATE USER IF NOT EXISTS 'disco_admin'@'%' IDENTIFIED BY 'd1sc04dm1n!';
+GRANT ALL PRIVILEGES ON discografica.* TO 'disco_admin'@'%';
 
 CREATE TABLE IF NOT EXISTS artista (
     id INT AUTO_INCREMENT PRIMARY KEY,

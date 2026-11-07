@@ -8,6 +8,11 @@ public class MenuContratos extends Menu{
     }
 
     @Override
+    protected boolean pausarDespuesDeEjecutar() {
+        return false;
+    }
+
+    @Override
     protected String titulo() {
         return "Menu Contratos";
     }
