@@ -1,11 +1,41 @@
 package menu;
 
+import gestores.Sello;
+import util.ConsolaUtil;
+
+import java.sql.SQLException;
+
 public abstract class Menu {
+    protected  final Sello sello;
+
+    protected Menu(Sello sello) {
+        this.sello = sello;
+    }
+
     protected abstract String titulo();
     protected abstract String[] opciones();
-    protected abstract void ejecutar(int opcion);
+    protected abstract void ejecutar(int opcion) throws SQLException;
 
-    public void mostrar() {
+    public final void mostrar() {
+        int opcion;
+        do {
+            ConsolaUtil.limpiarConsola();
+            System.out.println("\n=== " + titulo() + " ===");
+            String[] ops = opciones();
+            for (int i = 0; i < ops.length; i++) {
+                System.out.println((i + 1) + ".- " + ops[i]);
+            }
+            System.out.println("0.- Volver");
 
+            opcion = ConsolaUtil.leerOpcion(0, ops.length);
+            if (opcion != 0) {
+                try {
+                    ejecutar(opcion);
+                    ConsolaUtil.pausar();
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+            }
+        } while (opcion != 0);
     }
 }

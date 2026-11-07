@@ -22,3 +22,9 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# lock files
+.~lock*
+
+# Archivos personales (no se suben)
+mis_datos/
