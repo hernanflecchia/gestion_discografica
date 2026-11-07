@@ -1,6 +1,7 @@
 package modelo;
 
 import enums.EstadoArtista;
+import enums.TipoArtista;
 
 public class Solista extends Artista{
 
@@ -43,6 +44,8 @@ public class Solista extends Artista{
 
     //to string
 
+    @Override
+    public TipoArtista getTipo() { return TipoArtista.SOLISTA; }
 
     @Override
     public String toString() {

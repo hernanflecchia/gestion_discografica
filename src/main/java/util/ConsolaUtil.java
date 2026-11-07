@@ -42,7 +42,15 @@ public class ConsolaUtil {
             }
         }
     }
-    public static void leerTexto(String msg) {
-
+    public static String leerTexto(String msg) {
+        String texto;
+        do {
+            System.out.print(msg);
+            texto = scanner.nextLine().trim();
+            if (texto.isEmpty()) {
+                System.out.println("El valor no puede estar vacío.");
+            }
+        } while (texto.isEmpty());
+        return texto;
     }
 }

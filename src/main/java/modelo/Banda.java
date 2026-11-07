@@ -1,5 +1,6 @@
 package modelo;
 import enums.EstadoArtista;
+import enums.TipoArtista;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,9 @@ public class Banda extends  Artista{
     }
 
     //tostring
+
+    @Override
+    public TipoArtista getTipo() { return TipoArtista.BANDA; }
 
     @Override
     public String toString() {
