@@ -8,6 +8,16 @@ public class MenuPrincipal extends Menu {
     }
 
     @Override
+    protected boolean pausarDespuesDeEjecutar() {
+        return false;
+    }
+
+    @Override
+    protected String textoSalida() {
+        return "Salir";
+    }
+
+    @Override
     protected String titulo() {
         return "Menu Principal";
     }

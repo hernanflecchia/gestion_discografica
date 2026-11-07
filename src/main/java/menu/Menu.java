@@ -16,6 +16,13 @@ public abstract class Menu {
     protected abstract String[] opciones();
     protected abstract void ejecutar(int opcion) throws SQLException;
 
+    protected boolean pausarDespuesDeEjecutar() {
+        return true;
+    }
+    protected String textoSalida() {
+        return "Volver";
+    }
+
     public final void mostrar() {
         int opcion;
         do {
@@ -25,16 +32,16 @@ public abstract class Menu {
             for (int i = 0; i < ops.length; i++) {
                 System.out.println((i + 1) + ".- " + ops[i]);
             }
-            System.out.println("0.- Volver");
+            System.out.println("0.- " + textoSalida());
 
             opcion = ConsolaUtil.leerOpcion(0, ops.length);
             if (opcion != 0) {
                 try {
                     ejecutar(opcion);
-                    ConsolaUtil.pausar();
                 } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
+                if (pausarDespuesDeEjecutar()) ConsolaUtil.pausar();
             }
         } while (opcion != 0);
     }
