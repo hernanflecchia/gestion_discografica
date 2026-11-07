@@ -59,7 +59,7 @@ public class Banda extends  Artista{
 
     @Override
     public TipoArtista getTipo() { return TipoArtista.BANDA; }
-    
+
     @Override
     public String toString() {
         return "Banda: " +
