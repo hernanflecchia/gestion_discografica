@@ -8,3 +8,5 @@ Falta clase Album, revisar Lanzamiento, y hacer MenuLanzamiento.
 No existe una cancion "suelta" fuera de un lanzamiento single o album, y si se quiere buscar se hace en el contexto del lanzamiento.
 Tendriamos 3 clases con persistencia: Artista, Contrato, y Lanzamiento.
 --------------
+Vick update 8/11
+subida la clase Album, pendiente MenuLanzamiento.
