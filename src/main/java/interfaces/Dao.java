@@ -8,5 +8,5 @@ public interface Dao<T> {
     void eliminar(int id) throws SQLException;
     void modificar(T entidad) throws SQLException;
     T buscar(int id) throws SQLException;
-    ArrayList<T> buscarTodos();
+    ArrayList<T> buscarTodos() throws SQLException;
 }

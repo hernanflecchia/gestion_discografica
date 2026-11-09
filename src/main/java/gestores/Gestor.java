@@ -33,7 +33,7 @@ public abstract class Gestor<T extends Identificable> {
         return repositorio.buscar(id);
     }
 
-    public ArrayList<T> listar(){
+    public ArrayList<T> listar() throws SQLException {
         return repositorio.buscarTodos();
     }
 }
