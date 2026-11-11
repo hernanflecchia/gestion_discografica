@@ -1,6 +1,8 @@
 package util;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class ConsolaUtil {
@@ -42,6 +44,7 @@ public class ConsolaUtil {
             }
         }
     }
+
     public static String leerTexto(String msg) {
         String texto;
         do {
@@ -51,6 +54,57 @@ public class ConsolaUtil {
                 System.out.println("El valor no puede estar vacío.");
             }
         } while (texto.isEmpty());
+        return texto;
+    }
+
+    public static int leerEntero(String msg) {
+        while (true) {
+            String texto = leerTexto(msg);
+            try {
+                int valor = Integer.parseInt(texto);
+                if (valor >= 0) {
+                    return valor;
+                }
+                System.out.println("El valor no puede ser negativo.");
+            } catch (NumberFormatException e) {
+                System.out.println("Ingresá un número entero válido.");
+            }
+        }
+    }
+
+    public static double leerDecimal(String msg) {
+        while (true) {
+            String texto = leerTexto(msg).replace(',', '.');   // acepta 1,99 y 1.99
+            try {
+                double valor = Double.parseDouble(texto);
+                if (valor >= 0) {
+                    return valor;
+                }
+                System.out.println("El valor no puede ser negativo.");
+            } catch (NumberFormatException e) {
+                System.out.println("Ingresá un número válido.");
+            }
+        }
+    }
+
+    public static LocalDate leerFecha(String msg) {
+        while (true) {
+            String texto = leerTexto(msg + " (AAAA-MM-DD): ");
+            try {
+                return LocalDate.parse(texto);
+            } catch (DateTimeParseException e) {
+                System.out.println("Fecha inválida.");
+            }
+        }
+    }
+
+    public static String leerTextoOpcional(String msg) {
+        String texto;
+        System.out.print(msg);
+        texto = scanner.nextLine().trim();
+        if (texto.isEmpty()) {
+            return  null;
+        }
         return texto;
     }
 }

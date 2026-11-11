@@ -16,12 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArtistaDao implements Dao<Artista> {
+    private static final String SQL_SELECT =
+            "SELECT tipo, nombre, pais, estado, nombre_real FROM artista";
     private static final String SQL_BUSCAR_ARTISTAS =
-            "SELECT id, tipo, nombre, pais, estado, nombre_real FROM artista ORDER BY nombre";
+            SQL_SELECT + " ORDER BY nombre";
     private static final String SQL_BUSCAR_INTEGRANTES =
             "SELECT nombre FROM banda_integrante WHERE artista_id = ?";
     private static final String SQL_BUSCAR_ARTISTA_POR_ID =
-            SQL_BUSCAR_ARTISTAS + " WHERE id = ?";
+            SQL_SELECT + " WHERE id = ?";
     private static final String SQL_INSERTAR_ARTISTA =
             "INSERT INTO artista(tipo, nombre, pais, estado, nombre_real) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_BAJA =
@@ -91,7 +93,10 @@ public class ArtistaDao implements Dao<Artista> {
                         ps.setNull(4, java.sql.Types.VARCHAR);
                     }
                     ps.setInt(5, artista.getId());
-                    ps.executeUpdate();
+                    if (ps.executeUpdate() == 0) {
+                        // Acá debe ir una excepción propia que capture esto porque no es una SQLException
+                        throw new SQLException("No existe el artista con el id: " + artista.getId());
+                    }
                 }
                 if (artista instanceof Banda b) {
                     try (PreparedStatement ps = conn.prepareStatement(SQL_BORRAR_INTEGRANTES)) {
