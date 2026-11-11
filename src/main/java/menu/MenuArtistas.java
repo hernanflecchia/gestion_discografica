@@ -21,7 +21,7 @@ public class MenuArtistas extends Menu{
         return new String[]{
                 "Alta solista",
                 "Alta banda",
-                "Listar artistas",
+                "Listar",
                 "Buscar por id",
                 "Dar de baja"
         };
@@ -32,20 +32,20 @@ public class MenuArtistas extends Menu{
         switch (opcion) {
             //case 1 -> altaSolista();
             //case 2 -> altaBanda();
-            case 3 -> listar();
+            case 3 -> mostrarArtistas();
             //case 4 -> buscar();
             //case 5 -> darDeBaja();
         }
     }
 
-    private void listar() throws SQLException {
+    private void mostrarArtistas() throws SQLException {
         List<Artista> lista = sello.listarArtistas();
         if (lista.isEmpty()) {
             System.out.println("No hay artistas cargados.");
             return;
         }
-        for (Artista a : lista) {
-            System.out.println(a);
+        for (Artista artista : lista) {
+            System.out.println(artista);
         }
     }
 }
