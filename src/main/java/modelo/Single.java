@@ -1,6 +1,7 @@
 package modelo;
 
 import enums.Genero;
+import enums.TipoLanzamiento;
 import excepciones.LanzamientoInvalidoException;
 import java.time.LocalDate;
 
@@ -25,6 +26,9 @@ public class Single extends Lanzamiento {
         }
         this.cancion = cancion;
     }
+
+    @Override
+    public TipoLanzamiento getTipo() { return TipoLanzamiento.SINGLE; }
 
     //se puede cambiar a otro max, pero siendo realistas mas de 10 min un single no suele durar.
     // el sello obligaria a un radio edit, por ej.
