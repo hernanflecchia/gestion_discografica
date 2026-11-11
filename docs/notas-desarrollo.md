@@ -16,3 +16,6 @@ Falta clase Album, revisar Lanzamiento, y hacer MenuLanzamiento.
 No existe una cancion "suelta" fuera de un lanzamiento single o album, y si se quiere buscar se hace en el contexto del lanzamiento.
 Tendriamos 3 clases con persistencia: Artista, Contrato, y Lanzamiento.
 --------------
+07/11: pude solucionar conflictos con merge entre mi rama y el dev.
+ realice una modificacion en DAOartista que no me permitia compilar correctamente el maven
+Logre el BUILD SUCCESS quw indico que la complñicacion termino correctamente. luego trabajo con clases
