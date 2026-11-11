@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ArtistaDao implements Dao<Artista> {
     private static final String SQL_SELECT =
-            "SELECT tipo, nombre, pais, estado, nombre_real FROM artista";
+            "SELECT id, tipo, nombre, pais, estado, nombre_real FROM artista";
     private static final String SQL_BUSCAR_ARTISTAS =
             SQL_SELECT + " ORDER BY nombre";
     private static final String SQL_BUSCAR_INTEGRANTES =

@@ -161,7 +161,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
             }
             l = album;
         }
-        l.setUnidadesVendidas(rs.getInt("unidades_vendidas"));   // el constructor no lo recibe
+        l.setUnidadesVendidas(rs.getInt("unidades_vendidas"));
         return l;
     }
 
