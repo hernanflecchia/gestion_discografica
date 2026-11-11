@@ -13,8 +13,8 @@ public class Main {
     public static void main(String[] args) {
         // Daos
         ArtistaDao artistaDao = new ArtistaDao();
-        ContratoDao contratoDao = new ContratoDao();
-        LanzamientoDao lanzamientoDao = new LanzamientoDao();
+        ContratoDao contratoDao = new ContratoDao(artistaDao);
+        LanzamientoDao lanzamientoDao = new LanzamientoDao(artistaDao);
         // gestores
         GestorArtista gestorArtista = new GestorArtista(artistaDao);
         GestorContrato gestorContrato = new GestorContrato(contratoDao);

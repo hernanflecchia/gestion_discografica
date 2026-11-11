@@ -2,6 +2,7 @@ package gestores;
 
 import excepciones.LanzamientoInvalidoException;
 import modelo.Artista;
+import modelo.Contrato;
 import modelo.Lanzamiento;
 
 import java.sql.SQLException;
@@ -37,7 +38,11 @@ public class Sello {
         return artistas.listar();
 
     }
-    public void listarLanzamientos() {
+    public List<Lanzamiento> listarLanzamientos() throws SQLException {
+        return lanzamientos.listar();
     }
 
+    public List<Contrato> listarContratos() throws SQLException {
+        return contratos.listar();
+    }
 }
