@@ -2,7 +2,6 @@ package dao;
 
 import config.Conexion;
 import enums.EstadoContrato;
-import enums.Genero;
 import interfaces.Dao;
 import modelo.Artista;
 import modelo.Contrato;
@@ -40,7 +39,7 @@ public class ContratoDao implements Dao<Contrato> {
                 ps.setDate(2, Date.valueOf(entidad.getFechaInicio()));
                 ps.setDate(3, Date.valueOf(entidad.getFechaFin()));
                 ps.setDouble(4, entidad.getPorcentajeRegalias());
-                ps.setString(5, entidad.getEstadoContrato().name());
+                ps.setString(5, entidad.getEstado().name());
                 ps.executeUpdate();
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -75,7 +74,7 @@ public class ContratoDao implements Dao<Contrato> {
                 ps.setDate(1, Date.valueOf(entidad.getFechaInicio()));
                 ps.setDate(2, Date.valueOf(entidad.getFechaFin()));
                 ps.setDouble(3, entidad.getPorcentajeRegalias());
-                ps.setString(4, entidad.getEstadoContrato().name());
+                ps.setString(4, entidad.getEstado().name());
                 ps.setInt(5, entidad.getId());
                 if (ps.executeUpdate() == 0) {
                     // Acá debe ir una excepción propia que capture esto porque no es una SQLException
@@ -131,6 +130,6 @@ public class ContratoDao implements Dao<Contrato> {
         double porcentajeRegalias = rs.getDouble("porcentaje_regalias");
         EstadoContrato estadoContrato = EstadoContrato.valueOf(rs.getString("estado"));
 
-        return new Contrato(fechaInicio, fechaFin, porcentajeRegalias, estadoContrato, artista);
+        return new Contrato(id, fechaInicio, fechaFin, porcentajeRegalias, estadoContrato, artista);
     }
 }
