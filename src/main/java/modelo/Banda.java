@@ -1,0 +1,78 @@
+
+package modelo;
+
+import enums.EstadoArtista;
+import enums.TipoArtista;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Banda extends Artista {
+
+    private List<String> integrantes;
+
+    // Constructor para una banda nueva
+    public Banda(String nombre, String pais, List<String> integrantes) {
+        super(nombre, pais);
+        setIntegrantes(integrantes);
+    }
+
+    // Constructor para recuperar una banda existente
+    public Banda(int id, String nombre, String pais,
+                 EstadoArtista estado, List<String> integrantes) {
+        super(id, nombre, pais, estado);
+        setIntegrantes(integrantes);
+    }
+
+    // Getter: devuelve una copia para proteger la lista interna
+    public List<String> getIntegrantes() {
+        return new ArrayList<>(integrantes);
+    }
+
+    // Setter con validaciones
+
+    public void setIntegrantes(List<String> integrantes) {
+        if (integrantes == null || integrantes.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "La banda debe tener al menos un integrante."
+            );
+        }
+
+        List<String> integrantesValidos = new ArrayList<>();
+
+        for (String integrante : integrantes) {
+            if (integrante == null || integrante.trim().isEmpty()) {
+                throw new IllegalArgumentException(
+                        "El nombre de cada integrante no puede estar vacío."
+                );
+            }
+
+            integrantesValidos.add(integrante.trim());
+        }
+
+        this.integrantes = integrantesValidos;
+    }
+
+    @Override
+    public TipoArtista getTipo() {
+        return TipoArtista.BANDA;
+    }
+
+    @Override
+    public String descripcion() {
+        return "Tipo de artista: Banda"
+                + "\nIntegrantes: " + integrantes;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+}
+
+//OBSERVACIONES
+
+//aca mantuve misma logica de clase abstracta, no generando desde el constructor, sino tomarlo desde el set
+//despues de haber realizado las validaciones y el manejo de excepcion.
+//tuve muchas dudas al generar la validacion del setter
+//NO ENTIENDO MUCHO COMO MANEJA LA PERSISTENCIA DE DATOS CON UN LISTADO
