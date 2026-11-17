@@ -1,8 +1,8 @@
 package modelo;
 
-import Enums.EstadoContrato;
-import Excepciones.ContratoVencidoException;
-import Interfaces.Identificable;
+import enums.EstadoContrato;
+import excepciones.ContratoVencidoException;
+import interfaces.Identificable;
 
 import java.time.LocalDate;
 
@@ -24,7 +24,7 @@ public class Contrato implements Identificable {
         this.estado=EstadoContrato.VIGENTE;
     }
     public Contrato( int id,Artista artista, LocalDate fechaInicio, LocalDate fechaFin, double porcentajeRegalias,EstadoContrato estado) {
-        validadId(id);
+        validarId(id);
         this.id=id;
         setArtista(artista);
         setFechaInicio(fechaInicio);
@@ -59,6 +59,11 @@ public class Contrato implements Identificable {
         return estado;
     }
 
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void asignarId(int id){
         if(this.id != 0 ){
             throw new IllegalStateException("El contrato ya tiene un identificador asignado");
@@ -79,7 +84,7 @@ public class Contrato implements Identificable {
         {
             throw  new IllegalArgumentException("La fecha de inicio no puede nula");
         }
-        if(fechaInicio.isAfter(this.fechaFin))
+        if(this.fechaFin != null && fechaInicio.isAfter(this.fechaFin))
         {
             throw new IllegalArgumentException("La fecha inico no puede ser posterior a la fecha de inicio");
         }
@@ -87,19 +92,39 @@ public class Contrato implements Identificable {
     }
 
 
-    public void setFechaFin(LocalDate fechaFin) {
+    public void setFechaFin(LocalDate fechaFin)
+    {
+     if (fechaFin == null)
+     {
+         throw new IllegalArgumentException("La fecha fin no puede ser nula");
+     }
+     if(this.fechaInicio != null && fechaFin.isBefore(this.fechaInicio))
+     {
+         throw  new IllegalArgumentException("La fecha fin no puede ser anterior a la fecha inicio");
+     }
         this.fechaFin = fechaFin;
     }
 
 
 
-    public void setPorcentajeRegalias(double porcentajeRegalias) {
+    public void setPorcentajeRegalias(double porcentajeRegalias)
+    {
+        if(porcentajeRegalias <= 0 || porcentajeRegalias > 100)
+        {
+          throw  new IllegalArgumentException("El porcentaje de regalias debe ser mayor a cero y menor o igual a cien");
+        }
+
         this.porcentajeRegalias = porcentajeRegalias;
     }
 
 
 
-    public void setEstado(EstadoContrato estado) {
+    public void setEstado(EstadoContrato estado)
+    {
+        if(estado == null)
+        {
+         throw new IllegalArgumentException("El estado no puede ser nulo");
+        }
         this.estado = estado;
     }
 
@@ -156,12 +181,5 @@ public class Contrato implements Identificable {
                 '}';
     }
 
-    return "Contrato: " +
-            "\nID: " + id +
-            "\nArtista: " + artista.getNombre() + " (ID: " + artista.getId() + ")" +
-            "\nFecha de Inicio: " + fechaInicio +
-            "\nFecha de Fin: " + fechaFin +
-            "\nPorcentaje de Regalías: " + porcentajeRegalias + "%" +
-            "\nEstado: " + estado;
-}
+
 }
