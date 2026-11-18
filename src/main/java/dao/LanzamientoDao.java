@@ -168,13 +168,14 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
     private List<Cancion> buscarCanciones(Connection conn, int lanzamientoId) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(SQL_BUSCAR_CANCIONES)) {
             ps.setInt(1, lanzamientoId);
-            ResultSet rs = ps.executeQuery();
-            List<Cancion> lista = new ArrayList<>();
-            while (rs.next()) {
-                Cancion cancion = new Cancion(rs.getString("titulo"), rs.getInt("duracion_seg"));
-                lista.add(cancion);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Cancion> lista = new ArrayList<>();
+                while (rs.next()) {
+                    Cancion cancion = new Cancion(rs.getString("titulo"), rs.getInt("duracion_seg"));
+                    lista.add(cancion);
+                }
+                return lista;
             }
-            return lista;
         }
     }
 
