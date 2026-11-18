@@ -6,8 +6,8 @@ import modelo.Lanzamiento;
 import java.sql.SQLException;
 
 public class GestorLanzamiento extends Gestor<Lanzamiento> {
-    public GestorLanzamiento(Dao<Lanzamiento> repositorio) {
-        super(repositorio);
+    public GestorLanzamiento(Dao<Lanzamiento> dao) {
+        super(dao);
     }
 
     @Override

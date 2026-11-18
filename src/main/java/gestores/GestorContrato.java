@@ -6,8 +6,8 @@ import modelo.Contrato;
 import java.sql.SQLException;
 
 public class GestorContrato extends Gestor<Contrato> {
-    public GestorContrato(Dao<Contrato> repositorio) {
-        super(repositorio);
+    public GestorContrato(Dao<Contrato> dao) {
+        super(dao);
     }
 
     @Override

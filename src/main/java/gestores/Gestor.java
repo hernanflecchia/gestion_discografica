@@ -7,33 +7,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public abstract class Gestor<T extends Identificable> {
-    protected  final Dao<T> repositorio;
+    protected  final Dao<T> dao;
 
-    protected Gestor(Dao<T> repositorio) {
-        this.repositorio = repositorio;
+    protected Gestor(Dao<T> dao) {
+        this.dao = dao;
     }
 
     protected abstract void validar(T entidad) throws SQLException;
 
     public void alta(T entidad) throws SQLException {
         validar(entidad);
-        repositorio.agregar(entidad);
+        dao.agregar(entidad);
     }
 
     public void modificar(T entidad) throws SQLException {
         validar(entidad);
-        repositorio.modificar(entidad);
+        dao.modificar(entidad);
     }
 
     public void baja(int id) throws SQLException {
-        repositorio.eliminar(id);
+        dao.eliminar(id);
     }
 
     public T buscar(int id) throws SQLException{
-        return repositorio.buscar(id);
+        return dao.buscar(id);
     }
 
     public ArrayList<T> listar() throws SQLException {
-        return repositorio.buscarTodos();
+        return dao.buscarTodos();
     }
 }
