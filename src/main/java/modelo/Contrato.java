@@ -23,6 +23,7 @@ public class Contrato implements Identificable {
        setPorcentajeRegalias(porcentajeRegalias);
         this.estado=EstadoContrato.VIGENTE;
     }
+
     public Contrato( int id,Artista artista, LocalDate fechaInicio, LocalDate fechaFin, double porcentajeRegalias,EstadoContrato estado) {
         validarId(id);
         this.id=id;
