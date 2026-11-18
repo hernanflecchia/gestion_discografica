@@ -8,7 +8,6 @@ import util.ConsolaUtil;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MenuContratos extends Menu{
@@ -37,7 +36,7 @@ public class MenuContratos extends Menu{
         }
     }
 
-    private  void nuevoContrato() throws SQLException {
+    private void nuevoContrato() throws Exception {
         System.out.println("\n========== NUEVO CONTRATO  ==========");
 
         System.out.println("Ingresá los datos solicitados.");
@@ -46,15 +45,13 @@ public class MenuContratos extends Menu{
 
         int idArtista = ConsolaUtil.leerEntero("Ingrese el id del artista");
 
-        Artista artista = sello.buscarArtista(idArtista);
-
         LocalDate inicio = ConsolaUtil.leerFecha("Ingrese la fecha de inicio del contrato");
 
         LocalDate fin = ConsolaUtil.leerFecha("Ingrese la fecha fin del contrato");
 
         double regalias = ConsolaUtil.leerDecimal("Ingrese el porcentaje de regalias");
 
-        Contrato contrato = new Contrato(artista,inicio,fin,regalias);
+        sello.firmarContrato(idArtista, inicio, fin, regalias);
 
         System.out.println("Contrato registrado exitosamente!");
     }
