@@ -24,7 +24,7 @@ public class MenuContratos extends Menu{
     }
 
     @Override
-    protected void ejecutar(int opcion) throws SQLException {
+    protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {
             //case 1 -> nuevoContrato();
             case 2 -> mostrarContratos();

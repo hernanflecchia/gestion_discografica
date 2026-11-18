@@ -29,7 +29,7 @@ public class MenuLanzamientos extends Menu{
     }
 
     @Override
-    protected void ejecutar(int opcion) throws SQLException {
+    protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {
             //case 1 -> publicarSingle();
             //case 2 -> publicarAlbum();
