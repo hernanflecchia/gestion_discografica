@@ -130,6 +130,6 @@ public class ContratoDao implements Dao<Contrato> {
         double porcentajeRegalias = rs.getDouble("porcentaje_regalias");
         EstadoContrato estadoContrato = EstadoContrato.valueOf(rs.getString("estado"));
 
-        return new Contrato(id, fechaInicio, fechaFin, porcentajeRegalias, estadoContrato, artista);
+        return new Contrato(id, artista, fechaInicio, fechaFin, porcentajeRegalias, estadoContrato);
     }
 }
