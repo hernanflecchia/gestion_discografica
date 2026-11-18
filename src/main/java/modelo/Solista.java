@@ -1,67 +1,62 @@
+
 package modelo;
 
 import enums.EstadoArtista;
 import enums.TipoArtista;
 
-public class Solista extends Artista{
+public class Solista extends Artista {
 
     private String nombreReal;
 
-    //constructores
+    // Constructor para crear un solista nuevo
     public Solista(String nombre, String pais, String nombreReal) {
         super(nombre, pais);
         setNombreReal(nombreReal);
     }
 
-    public Solista(int id, String nombre, String pais, EstadoArtista estado, String nombreReal) {
+    // Constructor para recuperar un solista existente
+    public Solista(int id, String nombre, String pais,
+                   EstadoArtista estado, String nombreReal) {
         super(id, nombre, pais, estado);
         setNombreReal(nombreReal);
     }
 
-    //getter
-
+    // Getter
     public String getNombreReal() {
         return nombreReal;
     }
 
-    //Setter con validacion
-
-
+    // Setter con validación
     public void setNombreReal(String nombreReal) {
-        if (nombreReal == null || nombreReal.trim().isEmpty()){
+        if (nombreReal == null || nombreReal.trim().isEmpty()) {
             throw new IllegalArgumentException(
-                    "El nombre real no puede estar vacio."
+                    "El nombre real no puede estar vacío."
             );
         }
         this.nombreReal = nombreReal.trim();
     }
 
-    //implementacion de metodo abstracto
+    // Implementación de los métodos abstractos de Artista
+    @Override
+    public TipoArtista getTipo() {
+        return TipoArtista.SOLISTA;
+    }
+
     @Override
     public String descripcion() {
         return "Tipo de Artista: Solista";
     }
 
-    //to string
-
-    @Override
-    public TipoArtista getTipo() { return TipoArtista.SOLISTA; }
-
+    // Representación textual del solista
     @Override
     public String toString() {
         return "Solista: " +
-                "\nNombreReal: " + nombreReal + '\'' +
-                "| " + super.toString();
-    }
-
-    @Override
-    public void setId(int id) {
-
+                "\nNombre real: " + nombreReal +
+                "\n" + super.toString();
     }
 }
-
 //OBSERVACIONES
 //sin dudas en cuanto a esta clase
 //lo mismo que en la clase abstracta, nno genere this.nombreReal desde el constructor
 // en constructor puse setNombreReal(nombreReal) pero en los setters hice validacion por nombre nulo,
-//o vacio o con espacios con manejo excepcion IllegalArgumentException
+//o vacio o con espacios con manejo excepcion IllegalArgumentException\

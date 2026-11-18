@@ -37,6 +37,7 @@ public abstract class Artista implements Identificable {
     //getters
 
 
+    @Override
     public int getId() {
         return id;
     }
@@ -94,6 +95,7 @@ public abstract class Artista implements Identificable {
 
     @Override
     public void setId(int id) {
+
         asignarId(id);
     }
 
@@ -135,7 +137,7 @@ public abstract class Artista implements Identificable {
                 "\nNombre: " + nombre +
                 "\nPais: " + pais +
                 "\nEstado: " + estado +
-                '|'+ descripcion();
+                "\n" + descripcion();
     }
 
 

@@ -1,75 +1,72 @@
+
 package modelo;
+
 import enums.EstadoArtista;
 import enums.TipoArtista;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Banda extends  Artista{
+public class Banda extends Artista {
 
     private List<String> integrantes;
 
-    //constructores
+    // Constructor para una banda nueva
     public Banda(String nombre, String pais, List<String> integrantes) {
         super(nombre, pais);
         setIntegrantes(integrantes);
     }
 
-    public Banda(int id, String nombre, String pais, EstadoArtista estado, List<String> integrantes) {
+    // Constructor para recuperar una banda existente
+    public Banda(int id, String nombre, String pais,
+                 EstadoArtista estado, List<String> integrantes) {
         super(id, nombre, pais, estado);
         setIntegrantes(integrantes);
     }
 
-    //getter
+    // Getter: devuelve una copia para proteger la lista interna
     public List<String> getIntegrantes() {
-        return integrantes;
+        return new ArrayList<>(integrantes);
     }
 
-    //setter con validacion
-
+    // Setter con validaciones
 
     public void setIntegrantes(List<String> integrantes) {
-        if(integrantes == null || integrantes.isEmpty()){
+        if (integrantes == null || integrantes.isEmpty()) {
             throw new IllegalArgumentException(
                     "La banda debe tener al menos un integrante."
             );
         }
 
-        List<String> integrantesValidos = new ArrayList<>();//listado auxiliar
+        List<String> integrantesValidos = new ArrayList<>();
 
-        for(String integrante : integrantes){
-            if(integrante == null || integrante.trim().isEmpty()){
+        for (String integrante : integrantes) {
+            if (integrante == null || integrante.trim().isEmpty()) {
                 throw new IllegalArgumentException(
-                        "El nombre de cada integrante no puede estar vacio."
+                        "El nombre de cada integrante no puede estar vacío."
                 );
             }
-            integrantesValidos.add(integrante);
+
+            integrantesValidos.add(integrante.trim());
         }
 
         this.integrantes = integrantesValidos;
     }
 
-    //implementacion metodos abstracto
     @Override
-    public String descripcion() {
-        return "Tipo de Artista: Banda";
+    public TipoArtista getTipo() {
+        return TipoArtista.BANDA;
     }
 
-    //tostring
-
     @Override
-    public TipoArtista getTipo() { return TipoArtista.BANDA; }
+    public String descripcion() {
+        return "Tipo de artista: Banda"
+                + "\nIntegrantes: " + integrantes;
+    }
 
     @Override
     public String toString() {
-        return "Banda: " +
-                "\n Integrantes: " + integrantes +
-                "| " + super.toString();
-    }
-
-    @Override
-    public void setId(int id) {
-
+        return super.toString();
     }
 }
 

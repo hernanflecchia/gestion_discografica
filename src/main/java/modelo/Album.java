@@ -1,6 +1,7 @@
 package modelo;
 
 import enums.Genero;
+import enums.TipoLanzamiento;
 import excepciones.LanzamientoInvalidoException;
 import interfaces.Tourable;
 import java.time.LocalDate;
@@ -35,6 +36,8 @@ public class Album extends Lanzamiento implements Tourable {
         return Collections.unmodifiableList(canciones);
     }
 
+    @Override
+    public TipoLanzamiento getTipo() { return TipoLanzamiento.ALBUM; }
 
     @Override
     public void validar() throws LanzamientoInvalidoException {

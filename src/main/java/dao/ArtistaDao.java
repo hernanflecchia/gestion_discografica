@@ -16,12 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArtistaDao implements Dao<Artista> {
-    private static final String SQL_BUSCAR_ARTISTAS =
+    private static final String SQL_SELECT =
             "SELECT id, tipo, nombre, pais, estado, nombre_real FROM artista";
+    private static final String SQL_BUSCAR_ARTISTAS =
+            SQL_SELECT + " ORDER BY nombre";
     private static final String SQL_BUSCAR_INTEGRANTES =
             "SELECT nombre FROM banda_integrante WHERE artista_id = ?";
     private static final String SQL_BUSCAR_ARTISTA_POR_ID =
-            "SELECT tipo, nombre, pais, estado, nombre_real FROM artista WHERE id = ?";
+            SQL_SELECT + " WHERE id = ?";
     private static final String SQL_INSERTAR_ARTISTA =
             "INSERT INTO artista(tipo, nombre, pais, estado, nombre_real) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_BAJA =
@@ -30,35 +32,41 @@ public class ArtistaDao implements Dao<Artista> {
             "UPDATE artista SET nombre = ?, pais = ?, estado = ?, nombre_real = ? WHERE id = ?";
     private static final String SQL_BORRAR_INTEGRANTES =
             "DELETE FROM banda_integrante WHERE artista_id = ?";
+    private static final String SQL_INSERTAR_INTEGRANTE =
+            "INSERT INTO banda_integrante (artista_id, nombre) VALUES (?, ?)";
 
     @Override
     public void agregar(Artista entidad) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion()) {
             conn.setAutoCommit(false);
             try {
-                try (PreparedStatement ps = conn.prepareStatement(SQL_INSERTAR_ARTISTA)) {
-                    ps.setString(1, entidad.getTipo().toString());
+                try (PreparedStatement ps = conn.prepareStatement(SQL_INSERTAR_ARTISTA,
+                        PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, entidad.getTipo().name());
                     ps.setString(2, entidad.getNombre());
                     ps.setString(3, entidad.getPais());
-                    ps.setString(4, entidad.getEstado().toString());
+                    ps.setString(4, entidad.getEstado().name());
                     if (entidad instanceof Solista) {
-                        ps.setString(5, entidad.getNombreReal());
+                        ps.setString(5, ((Solista) entidad).getNombreReal());
                     } else {
                         ps.setNull(5, java.sql.Types.VARCHAR);
                     }
                     ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            entidad.asignarId(rs.getInt(1));
+                        }
+                    }
                 }
                 if (entidad instanceof Banda b) {
                     insertarIntegrantes(conn, b);
                 }
                 conn.commit();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                conn.rollback();
+                throw e;
             }
         }
-    }
-
-    private void insertarIntegrantes(Connection conn, Banda b) {
     }
 
     @Override
@@ -66,9 +74,9 @@ public class ArtistaDao implements Dao<Artista> {
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement ps = conn.prepareStatement(SQL_BAJA)) {
             ps.setInt(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            if (ps.executeUpdate() == 0) {
+                throw new SQLException("No existe el artista con el id: " + id);
+            }
         }
     }
 
@@ -87,7 +95,10 @@ public class ArtistaDao implements Dao<Artista> {
                         ps.setNull(4, java.sql.Types.VARCHAR);
                     }
                     ps.setInt(5, artista.getId());
-                    ps.executeUpdate();
+                    if (ps.executeUpdate() == 0) {
+                        // Acá debe ir una excepción propia que capture esto porque no es una SQLException
+                        throw new SQLException("No existe el artista con el id: " + artista.getId());
+                    }
                 }
                 if (artista instanceof Banda b) {
                     try (PreparedStatement ps = conn.prepareStatement(SQL_BORRAR_INTEGRANTES)) {
@@ -109,7 +120,7 @@ public class ArtistaDao implements Dao<Artista> {
         try (Connection conn = Conexion.obtenerConexion();
         PreparedStatement ps = conn.prepareStatement(SQL_BUSCAR_ARTISTA_POR_ID)) {
             ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery();) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return crearArtista(rs, conn);
                 }
@@ -120,7 +131,7 @@ public class ArtistaDao implements Dao<Artista> {
     }
 
     @Override
-    public ArrayList<Artista> buscarTodos() {
+    public ArrayList<Artista> buscarTodos() throws SQLException {
         ArrayList<Artista> lista = new ArrayList<>();
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement ps = conn.prepareStatement(SQL_BUSCAR_ARTISTAS);
@@ -129,8 +140,6 @@ public class ArtistaDao implements Dao<Artista> {
             while (rs.next()) {
                 lista.add(crearArtista(rs, conn));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
         return lista;
     }
@@ -144,20 +153,29 @@ public class ArtistaDao implements Dao<Artista> {
         if (tipo == TipoArtista.SOLISTA) {
             return new Solista(id, nombre, pais, estado, rs.getString("nombre_real"));
         }
-        return new Banda(id, nombre, pais, estado, buscarIntegrantes((Connection) conn, id));
+        return new Banda(id, nombre, pais, estado, buscarIntegrantes(conn, id));
     }
 
     private List<String> buscarIntegrantes(Connection conn, int artistaId) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(SQL_BUSCAR_INTEGRANTES)) {
             ps.setInt(1, artistaId);
-            ResultSet rs = ps.executeQuery();
-            List<String> lista = new ArrayList<>();
-            while (rs.next()) {
-                lista.add(rs.getString("nombre"));
+            try (ResultSet rs = ps.executeQuery()) {
+                List<String> lista = new ArrayList<>();
+                while (rs.next()) {
+                    lista.add(rs.getString("nombre"));
+                }
+                return lista;
             }
-            return lista;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        }
+    }
+
+    private void insertarIntegrantes(Connection conn, Banda b) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(SQL_INSERTAR_INTEGRANTE)) {
+            for (String integrante : b.getIntegrantes()) {
+                ps.setInt(1, b.getId());
+                ps.setString(2, integrante);
+                ps.executeUpdate();
+            }
         }
     }
 }

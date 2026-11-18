@@ -14,7 +14,7 @@ public abstract class Menu {
 
     protected abstract String titulo();
     protected abstract String[] opciones();
-    protected abstract void ejecutar(int opcion) throws SQLException;
+    protected abstract void ejecutar(int opcion) throws Exception;
 
     protected boolean pausarDespuesDeEjecutar() {
         return true;

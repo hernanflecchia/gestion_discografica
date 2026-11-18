@@ -1,6 +1,7 @@
 package modelo;
 
 import enums.Genero;
+import enums.TipoLanzamiento;
 import excepciones.LanzamientoInvalidoException;
 import interfaces.Identificable;
 import java.time.LocalDate;
@@ -28,6 +29,8 @@ public abstract class Lanzamiento implements Identificable {
     public abstract void validar() throws LanzamientoInvalidoException;
 
     public abstract double calcularIngresos();
+
+    public abstract TipoLanzamiento getTipo();
 
     public void registrarVenta(int cantidad) {
         if (cantidad <= 0) {
