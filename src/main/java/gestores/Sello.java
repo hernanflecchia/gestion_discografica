@@ -67,7 +67,7 @@ public class Sello {
 
     public void registrarVenta(int lanzamientoId, int cantidad) throws Exception {
         Lanzamiento lanzamiento = lanzamientos.buscar(lanzamientoId);
-        lanzamiento.registrarVenta(lanzamientoId);
+        lanzamiento.registrarVenta(cantidad);
         lanzamientos.modificar(lanzamiento);
     }
 
