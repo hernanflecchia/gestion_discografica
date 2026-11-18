@@ -112,7 +112,7 @@ import java.util.List;
 
 
     @Override
-    protected void ejecutar(int opcion) throws SQLException {
+    protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {
             case 1 -> altaSolista();
             case 2 -> altaBanda();

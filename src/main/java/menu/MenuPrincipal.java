@@ -28,7 +28,7 @@ public class MenuPrincipal extends Menu {
     }
 
     @Override
-    protected void ejecutar(int opcion) {
+    protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {
             case 1 -> new MenuArtistas(sello).mostrar();
             case 2 -> new MenuLanzamientos(sello).mostrar();

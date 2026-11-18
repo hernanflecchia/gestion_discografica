@@ -13,14 +13,14 @@ public abstract class Gestor<T extends Identificable> {
         this.dao = dao;
     }
 
-    protected abstract void validar(T entidad) throws SQLException;
+    protected abstract void validar(T entidad) throws Exception;
 
-    public void alta(T entidad) throws SQLException {
+    public void alta(T entidad) throws Exception {
         validar(entidad);
         dao.agregar(entidad);
     }
 
-    public void modificar(T entidad) throws SQLException {
+    public void modificar(T entidad) throws Exception {
         validar(entidad);
         dao.modificar(entidad);
     }

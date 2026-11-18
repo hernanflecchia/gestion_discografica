@@ -18,7 +18,7 @@ public class MenuTours extends Menu {
     }
 
     @Override
-    protected void ejecutar(int opcion) {
+    protected void ejecutar(int opcion) throws Exception {
 
     }
 }
