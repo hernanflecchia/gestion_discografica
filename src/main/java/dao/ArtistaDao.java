@@ -74,7 +74,9 @@ public class ArtistaDao implements Dao<Artista> {
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement ps = conn.prepareStatement(SQL_BAJA)) {
             ps.setInt(1, id);
-            ps.executeUpdate();
+            if (ps.executeUpdate() == 0) {
+                throw new SQLException("No existe el artista con el id: " + id);
+            }
         }
     }
 
@@ -151,18 +153,19 @@ public class ArtistaDao implements Dao<Artista> {
         if (tipo == TipoArtista.SOLISTA) {
             return new Solista(id, nombre, pais, estado, rs.getString("nombre_real"));
         }
-        return new Banda(id, nombre, pais, estado, buscarIntegrantes((Connection) conn, id));
+        return new Banda(id, nombre, pais, estado, buscarIntegrantes(conn, id));
     }
 
     private List<String> buscarIntegrantes(Connection conn, int artistaId) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(SQL_BUSCAR_INTEGRANTES)) {
             ps.setInt(1, artistaId);
-            ResultSet rs = ps.executeQuery();
-            List<String> lista = new ArrayList<>();
-            while (rs.next()) {
-                lista.add(rs.getString("nombre"));
+            try (ResultSet rs = ps.executeQuery()) {
+                List<String> lista = new ArrayList<>();
+                while (rs.next()) {
+                    lista.add(rs.getString("nombre"));
+                }
+                return lista;
             }
-            return lista;
         }
     }
 

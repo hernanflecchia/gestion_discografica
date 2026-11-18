@@ -1,7 +1,6 @@
 package gestores;
 
 import enums.EstadoArtista;
-import excepciones.LanzamientoInvalidoException;
 import modelo.Artista;
 import modelo.Contrato;
 import modelo.Lanzamiento;
@@ -15,6 +14,10 @@ public class Sello {
     private GestorArtista artistas;
     private GestorContrato contratos;
     private GestorLanzamiento lanzamientos;
+
+    public String getNombre() {
+        return nombre;
+    }
 
     public Sello(String nombre, GestorArtista artistas, GestorContrato contratos, GestorLanzamiento lanzamientos) {
         this.nombre = nombre;
@@ -67,7 +70,7 @@ public class Sello {
 
     public void registrarVenta(int lanzamientoId, int cantidad) throws Exception {
         Lanzamiento lanzamiento = lanzamientos.buscar(lanzamientoId);
-        lanzamiento.registrarVenta(lanzamientoId);
+        lanzamiento.registrarVenta(cantidad);
         lanzamientos.modificar(lanzamiento);
     }
 
