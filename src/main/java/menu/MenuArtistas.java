@@ -1,59 +1,3 @@
-/* ARME MENU NUEVO
-  ANTES ESTABA DE ESTA FORMA
-
-  package menu;
-
-import gestores.Sello;
-import modelo.Artista;
-import java.util.List;
-
-import java.sql.SQLException;
-
-public class MenuArtistas extends Menu{
-    protected MenuArtistas(Sello sello) {
-        super(sello);
-    }
-
-    @Override
-    protected String titulo() {
-        return "Menu Artistas";
-    }
-
-    @Override
-    protected String[] opciones() {
-        return new String[]{
-                "Alta solista",
-                "Alta banda",
-                "Listar",
-                "Buscar por id",
-                "Dar de baja"
-        };
-    }
-
-    @Override
-    protected void ejecutar(int opcion) throws SQLException {
-        switch (opcion) {
-            //case 1 -> altaSolista();
-            //case 2 -> altaBanda();
-            case 3 -> mostrarArtistas();
-            //case 4 -> buscar();
-            //case 5 -> darDeBaja();
-        }
-    }
-
-    private void mostrarArtistas() throws SQLException {
-        List<Artista> lista = sello.listarArtistas();
-        if (lista.isEmpty()) {
-            System.out.println("No hay artistas cargados.");
-            return;
-        }
-        for (Artista artista : lista) {
-            System.out.println(artista);
-        }
-    }
-}*/
-
-//NUEVO
 
 
 package menu;
@@ -182,7 +126,9 @@ import java.util.List;
 
       Cada integrante se incorpora a una lista que luego recibe el constructor de Banda.
 
-      En esta versión, la banda se construye y se muestra,pero todavía no se persiste en la base de datos.
+      SOLUCIONADO PERSISTENCIA A TRAVES DE SELLO
+      En esta versión, La banda se construye y se registra a través de Sello, que delega la operación
+      al gestor correspondiente para realizar la persistencia en la base de datos..
      */
     private void altaBanda() {
         System.out.println("\n========== ALTA DE BANDA ==========");
@@ -230,20 +176,21 @@ import java.util.List;
             System.out.println("\n--- Resumen de los datos ingresados ---");
             System.out.println(banda);
 
+            // Se registra la banda a traves de Sello.
+            sello.altaArtista(banda);
+
             System.out.println(
-                    "\nLa información se validó correctamente."
-            );
-            System.out.println(
-                    "El alta todavía no está conectada con Sello."
-            );
-            System.out.println(
-                    "La banda no fue guardada en la base de datos."
+                    "\nLa banda se registró correctamente."
             );
 
         } catch (IllegalArgumentException e) {
-            // Se muestra el motivo por el que no se pudo crear la banda.
+
             System.out.println(
                     "\nNo se pudo crear la banda: " + e.getMessage()
+            );
+        }catch (Exception e) {
+            System.out.println(
+                    "\nNo se pudo registrar la banda: " + e.getMessage()
             );
         }
     }
