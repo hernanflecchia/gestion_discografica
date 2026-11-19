@@ -265,25 +265,53 @@ import java.util.List;
         );
     }
 
-    /* Presenta la opción de baja de un artista.
+    /* Permite dar de baja un artista registrado.
 
-     La operación queda pendiente de integración con Sello.
-
-      No se elimina ni modifica ningún registro en esta versión.
-
+      Solicita el ID, verifica que el artista exista y pide
+      confirmación antes de ejecutar la operación mediante Sello.
       @throws SQLException se conserva para mantener la firma compatible con ejecutar()
      */
+
     private void darDeBaja() throws SQLException {
         System.out.println("\n========== BAJA DE ARTISTA ==========");
-        System.out.println(
-                "Esta opción permitirá dar de baja un artista registrado."
-        );
-        System.out.println(
-                "La operación todavía no está conectada con Sello."
-        );
-        System.out.println(
-                "No se realizó ninguna modificación en la base de datos."
-        );
+        System.out.println("Ingresá el ID del artista que querés dar de baja:");
+
+        int id = ConsolaUtil.leerOpcion(1, Integer.MAX_VALUE);
+
+        // Buscar el artista para comprobar que exista.
+        Artista artista = null;
+
+        for (Artista a : sello.listarArtistas()) {
+            if (a.getId() == id) {
+                artista = a;
+                break;
+            }
+        }
+
+        if (artista == null) {
+            System.out.println(
+                    "No se encontró ningún artista con el ID " + id + "."
+            );
+            return;
+        }
+
+        System.out.println("\nArtista seleccionado:");
+        System.out.println(artista);
+        System.out.println("\n¿Confirmás la baja de este artista?");
+        System.out.println("1. Sí");
+        System.out.println("2. No");
+
+        int confirmacion = ConsolaUtil.leerOpcion(1, 2);
+
+        if (confirmacion == 2) {
+            System.out.println("Operación cancelada. No se realizaron cambios.");
+            return;
+        }
+
+        sello.bajaArtista(id);
+
+        System.out.println("\nLa baja del artista se procesó correctamente.");
     }
+
 }
 
