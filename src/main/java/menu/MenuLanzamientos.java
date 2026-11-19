@@ -70,6 +70,8 @@ public class MenuLanzamientos extends Menu {
             return;
         }
 
+        sello.verificarPuedePublicar(artista);
+
         String titulo = ConsolaUtil.leerTexto("Título del single: ");
         LocalDate fecha = ConsolaUtil.leerFecha("Fecha de lanzamiento");
         double precio = ConsolaUtil.leerDecimal("Precio: ");

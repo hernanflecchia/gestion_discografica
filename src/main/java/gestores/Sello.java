@@ -1,6 +1,7 @@
 package gestores;
 
 import enums.EstadoArtista;
+import excepciones.SinContratoVigenteException;
 import modelo.Album;
 import modelo.Artista;
 import modelo.Contrato;
@@ -50,11 +51,15 @@ public class Sello {
     }
 
     // Contratos
+    private void verificarActivo(Artista artista) {
+        if (artista.getEstado() != EstadoArtista.ACTIVO) {
+            throw new IllegalStateException("El artista " + artista.getNombre() + " no está activo.");
+        }
+    }
+
     public void firmarContrato(int artistaId, LocalDate inicio, LocalDate fin, double porcentaje) throws Exception {
         Artista artista = artistas.buscar(artistaId);
-        if (artista.getEstado() != EstadoArtista.ACTIVO) {
-            throw new IllegalStateException("Este artista no esta activo");
-        }
+        verificarActivo(artista);
         Contrato contrato = new Contrato(artista, inicio, fin, porcentaje);
         contratos.alta(contrato);
     }
@@ -73,11 +78,9 @@ public class Sello {
     // Lanzamientos
     // solo publica un artista activo con contrato vigente
     public void verificarPuedePublicar(Artista artista) throws Exception {
-        if (artista.getEstado() != EstadoArtista.ACTIVO) {
-            throw new IllegalStateException("Este artista no está activo");
-        }
+        verificarActivo(artista);
         if (contratos.buscarVigente(artista) == null) {
-            throw new IllegalStateException("El artista " + artista.getNombre() + " no tiene un contrato vigente.");
+            throw new SinContratoVigenteException(artista);
         }
     }
 
@@ -110,7 +113,7 @@ public class Sello {
         Artista artista = artistas.buscar(artistaId);
         Contrato contrato = contratos.buscarVigente(artista);
         if (contrato == null) {
-            throw new IllegalStateException("El artista " + artista.getNombre() + " no tiene un contrato vigente.");
+            throw new SinContratoVigenteException(artista);
         }
         double importe = 0;
         for (Lanzamiento lanzamiento: lanzamientos.listarPorArtista(artista)) {
