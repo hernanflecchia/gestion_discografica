@@ -90,8 +90,9 @@ public class MenuContratos extends Menu{
 
         int idArtista = ConsolaUtil.leerEntero ("Ingrese el ID del artista: ");
 
-        sello.calcularRegalias(idArtista);
+        double regalias = sello.calcularRegalias(idArtista);
 
+        System.out.printf("Total de regalías para el artista ID %d: $%.2f%n", idArtista,regalias);
 
     }
 
