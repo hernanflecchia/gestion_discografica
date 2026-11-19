@@ -72,20 +72,13 @@ public class MenuContratos extends Menu{
         }
     }
 
-    private void rescindirContrato() throws SQLException, ContratoVencidoException {
+    private void rescindirContrato() throws Exception {
         System.out.println("\n========== RESCINDIR CONTRATO ==========");
 
-        int idContrato = ConsolaUtil.leerEntero("Ingrese el Id del contrato a rescindir: ");
+        int idContrato = ConsolaUtil.leerEntero("Ingrese el ID del contrato a rescindir: ");
 
-        Contrato contrato = buscarContratoPorId(idContrato);
-        if(contrato == null)
-        {
-            System.out.println("No se encontró ningún contrato con el ID " + idContrato);
 
-            return;
-        }
-
-        contrato.rescindir();
+        sello.rescindirContrato(idContrato);
 
         System.out.println("El contrato " + idContrato + "fue rescindido exitosamente");
 
@@ -95,12 +88,9 @@ public class MenuContratos extends Menu{
     private void calcularRegalias() throws Exception {
         System.out.println("\n========== CALCULAR REGALÍAS ==========");
 
-        int idContrato = ConsolaUtil.leerEntero ("Ingrese el ID del contrato: ");
+        int idArtista = ConsolaUtil.leerEntero ("Ingrese el ID del artista: ");
 
-        sello.calcularRegalias(idContrato);
-
-        System.out.println();
-
+        sello.calcularRegalias(idArtista);
 
 
     }
