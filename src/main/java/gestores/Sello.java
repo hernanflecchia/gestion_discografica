@@ -71,14 +71,18 @@ public class Sello {
     }
 
     // Lanzamientos
-    public void publicarLanzamiento(Lanzamiento lanzamiento) throws Exception {
-        Artista artista = lanzamiento.getArtista();
+    // solo publica un artista activo con contrato vigente
+    public void verificarPuedePublicar(Artista artista) throws Exception {
         if (artista.getEstado() != EstadoArtista.ACTIVO) {
-            throw new IllegalStateException("Este artista no esta activo");
+            throw new IllegalStateException("Este artista no está activo");
         }
         if (contratos.buscarVigente(artista) == null) {
             throw new IllegalStateException("El artista " + artista.getNombre() + " no tiene un contrato vigente.");
         }
+    }
+
+    public void publicarLanzamiento(Lanzamiento lanzamiento) throws Exception {
+        verificarPuedePublicar(lanzamiento.getArtista());
         lanzamientos.alta(lanzamiento);
     }
 

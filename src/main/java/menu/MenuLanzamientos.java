@@ -92,9 +92,12 @@ public class MenuLanzamientos extends Menu {
         System.out.println("\n========== PUBLICAR ALBUM ==========");
 
         Artista artista = elegirArtista();
+
         if (artista == null) {
             return;
         }
+
+        sello.verificarPuedePublicar(artista);
 
         String titulo = ConsolaUtil.leerTexto("Título del álbum: ");
         LocalDate fecha = ConsolaUtil.leerFecha("Fecha de lanzamiento");
