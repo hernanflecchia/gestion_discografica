@@ -127,8 +127,11 @@ import java.util.List;
 
     /* Solicita los datos de un solista y construye el objeto.
 
-Importante: en esta versión, el objeto se valida y se muestra, pero todavía no se guarda en la base de datos.
-     */
+     En esta versión, el objeto se valida y se registra a través de Sello, que delega la operación
+    al gestor correspondiente para realizar la persistencia en la base de datos. */
+
+    // Alta de solista
+
     private void altaSolista() {
         System.out.println("\n========== ALTA DE SOLISTA ==========");
         System.out.println("Ingresá los datos solicitados.");
@@ -157,20 +160,20 @@ Importante: en esta versión, el objeto se valida y se muestra, pero todavía no
             System.out.println("\n--- Resumen de los datos ingresados ---");
             System.out.println(solista);
 
+            // Se registra el solista a través de Sello.
+            sello.altaArtista(solista);
+
             System.out.println(
-                    "\nLa información se validó correctamente."
-            );
-            System.out.println(
-                    "El alta todavía no está conectada con Sello."
-            );
-            System.out.println(
-                    "El solista no fue guardado en la base de datos."
+                    "\nEl solista se registró correctamente."
             );
 
         } catch (IllegalArgumentException e) {
-            // Se informa el error de validación sin cerrar el menú.
             System.out.println(
                     "\nNo se pudo crear el solista: " + e.getMessage()
+            );
+        } catch (Exception e) {
+            System.out.println(
+                    "\nNo se pudo registrar el solista: " + e.getMessage()
             );
         }
     }
