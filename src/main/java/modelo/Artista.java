@@ -15,6 +15,7 @@ public abstract class Artista implements Identificable {
 
     //constructor para nuevo artista
     //No genero ID, queda en 0 (deberia ser generado al guardarse en la Base de Datos?)
+    //El ID se asigna cuando se guarda en la base de datos.
 
     public Artista(String nombre, String pais) {
 
@@ -139,15 +140,6 @@ public abstract class Artista implements Identificable {
                 "\nEstado: " + estado +
                 "\n" + descripcion();
     }
-
-
-//OBSERVACIONES
-
-// Realice algunas consultas al chatgpt porque tenia algunas dudas en cuanto a la generacion del ID desde
-//la clase Artista; como ya trabajamos con la Base de Datos para la generacion y la persistencia el ID
-//se genera ahi. Al crear un nuevo Artista el ID queda temporalmente en 0; al recuperarlo de la base de daros
-// el constructor recibe el ID existente y se asigna mediante asignarId() para la persistencia
-
 
 
 

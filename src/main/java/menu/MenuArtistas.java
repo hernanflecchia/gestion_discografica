@@ -1,59 +1,3 @@
-/* ARME MENU NUEVO
-  ANTES ESTABA DE ESTA FORMA
-
-  package menu;
-
-import gestores.Sello;
-import modelo.Artista;
-import java.util.List;
-
-import java.sql.SQLException;
-
-public class MenuArtistas extends Menu{
-    protected MenuArtistas(Sello sello) {
-        super(sello);
-    }
-
-    @Override
-    protected String titulo() {
-        return "Menu Artistas";
-    }
-
-    @Override
-    protected String[] opciones() {
-        return new String[]{
-                "Alta solista",
-                "Alta banda",
-                "Listar",
-                "Buscar por id",
-                "Dar de baja"
-        };
-    }
-
-    @Override
-    protected void ejecutar(int opcion) throws SQLException {
-        switch (opcion) {
-            //case 1 -> altaSolista();
-            //case 2 -> altaBanda();
-            case 3 -> mostrarArtistas();
-            //case 4 -> buscar();
-            //case 5 -> darDeBaja();
-        }
-    }
-
-    private void mostrarArtistas() throws SQLException {
-        List<Artista> lista = sello.listarArtistas();
-        if (lista.isEmpty()) {
-            System.out.println("No hay artistas cargados.");
-            return;
-        }
-        for (Artista artista : lista) {
-            System.out.println(artista);
-        }
-    }
-}*/
-
-//NUEVO
 
 
 package menu;
@@ -127,8 +71,11 @@ import java.util.List;
 
     /* Solicita los datos de un solista y construye el objeto.
 
-Importante: en esta versión, el objeto se valida y se muestra, pero todavía no se guarda en la base de datos.
-     */
+     En esta versión, el objeto se valida y se registra a través de Sello, que delega la operación
+    al gestor correspondiente para realizar la persistencia en la base de datos. */
+
+    // Alta de solista
+
     private void altaSolista() {
         System.out.println("\n========== ALTA DE SOLISTA ==========");
         System.out.println("Ingresá los datos solicitados.");
@@ -157,20 +104,20 @@ Importante: en esta versión, el objeto se valida y se muestra, pero todavía no
             System.out.println("\n--- Resumen de los datos ingresados ---");
             System.out.println(solista);
 
+            // Se registra el solista a través de Sello.
+            sello.altaArtista(solista);
+
             System.out.println(
-                    "\nLa información se validó correctamente."
-            );
-            System.out.println(
-                    "El alta todavía no está conectada con Sello."
-            );
-            System.out.println(
-                    "El solista no fue guardado en la base de datos."
+                    "\nEl solista se registró correctamente."
             );
 
         } catch (IllegalArgumentException e) {
-            // Se informa el error de validación sin cerrar el menú.
             System.out.println(
                     "\nNo se pudo crear el solista: " + e.getMessage()
+            );
+        } catch (Exception e) {
+            System.out.println(
+                    "\nNo se pudo registrar el solista: " + e.getMessage()
             );
         }
     }
@@ -179,7 +126,9 @@ Importante: en esta versión, el objeto se valida y se muestra, pero todavía no
 
       Cada integrante se incorpora a una lista que luego recibe el constructor de Banda.
 
-      En esta versión, la banda se construye y se muestra,pero todavía no se persiste en la base de datos.
+      SOLUCIONADO PERSISTENCIA A TRAVES DE SELLO
+      En esta versión, La banda se construye y se registra a través de Sello, que delega la operación
+      al gestor correspondiente para realizar la persistencia en la base de datos..
      */
     private void altaBanda() {
         System.out.println("\n========== ALTA DE BANDA ==========");
@@ -227,20 +176,21 @@ Importante: en esta versión, el objeto se valida y se muestra, pero todavía no
             System.out.println("\n--- Resumen de los datos ingresados ---");
             System.out.println(banda);
 
+            // Se registra la banda a traves de Sello.
+            sello.altaArtista(banda);
+
             System.out.println(
-                    "\nLa información se validó correctamente."
-            );
-            System.out.println(
-                    "El alta todavía no está conectada con Sello."
-            );
-            System.out.println(
-                    "La banda no fue guardada en la base de datos."
+                    "\nLa banda se registró correctamente."
             );
 
         } catch (IllegalArgumentException e) {
-            // Se muestra el motivo por el que no se pudo crear la banda.
+
             System.out.println(
                     "\nNo se pudo crear la banda: " + e.getMessage()
+            );
+        }catch (Exception e) {
+            System.out.println(
+                    "\nNo se pudo registrar la banda: " + e.getMessage()
             );
         }
     }
@@ -315,25 +265,53 @@ Importante: en esta versión, el objeto se valida y se muestra, pero todavía no
         );
     }
 
-    /* Presenta la opción de baja de un artista.
+    /* Permite dar de baja un artista registrado.
 
-     La operación queda pendiente de integración con Sello.
-
-      No se elimina ni modifica ningún registro en esta versión.
-
+      Solicita el ID, verifica que el artista exista y pide
+      confirmación antes de ejecutar la operación mediante Sello.
       @throws SQLException se conserva para mantener la firma compatible con ejecutar()
      */
+
     private void darDeBaja() throws SQLException {
         System.out.println("\n========== BAJA DE ARTISTA ==========");
-        System.out.println(
-                "Esta opción permitirá dar de baja un artista registrado."
-        );
-        System.out.println(
-                "La operación todavía no está conectada con Sello."
-        );
-        System.out.println(
-                "No se realizó ninguna modificación en la base de datos."
-        );
+        System.out.println("Ingresá el ID del artista que querés dar de baja:");
+
+        int id = ConsolaUtil.leerOpcion(1, Integer.MAX_VALUE);
+
+        // Buscar el artista para comprobar que exista.
+        Artista artista = null;
+
+        for (Artista a : sello.listarArtistas()) {
+            if (a.getId() == id) {
+                artista = a;
+                break;
+            }
+        }
+
+        if (artista == null) {
+            System.out.println(
+                    "No se encontró ningún artista con el ID " + id + "."
+            );
+            return;
+        }
+
+        System.out.println("\nArtista seleccionado:");
+        System.out.println(artista);
+        System.out.println("\n¿Confirmás la baja de este artista?");
+        System.out.println("1. Sí");
+        System.out.println("2. No");
+
+        int confirmacion = ConsolaUtil.leerOpcion(1, 2);
+
+        if (confirmacion == 2) {
+            System.out.println("Operación cancelada. No se realizaron cambios.");
+            return;
+        }
+
+        sello.bajaArtista(id);
+
+        System.out.println("\nLa baja del artista se procesó correctamente.");
     }
+
 }
 

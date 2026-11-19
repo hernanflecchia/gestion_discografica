@@ -70,9 +70,4 @@ public class Banda extends Artista {
     }
 }
 
-//OBSERVACIONES
 
-//aca mantuve misma logica de clase abstracta, no generando desde el constructor, sino tomarlo desde el set
-//despues de haber realizado las validaciones y el manejo de excepcion.
-//tuve muchas dudas al generar la validacion del setter
-//NO ENTIENDO MUCHO COMO MANEJA LA PERSISTENCIA DE DATOS CON UN LISTADO
