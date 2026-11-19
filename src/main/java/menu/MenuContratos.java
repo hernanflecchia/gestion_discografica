@@ -1,6 +1,7 @@
 
 package menu;
 
+import excepciones.ContratoVencidoException;
 import gestores.Sello;
 import modelo.Artista;
 import modelo.Contrato;
@@ -22,7 +23,7 @@ public class MenuContratos extends Menu{
 
     @Override
     protected String[] opciones() {
-        return new String[]{"Nuevo.", "Listar.", "Actualizar."};
+        return new String[]{"Nuevo.", "Listar.", " Rescindir.","Calcular Regalias."};
     }
 
     @Override
@@ -43,13 +44,13 @@ public class MenuContratos extends Menu{
 
         System.out.println("Los campos no pueden quedar vacíos.\n");
 
-        int idArtista = ConsolaUtil.leerEntero("Ingrese el id del artista");
+        int idArtista = ConsolaUtil.leerEntero("Ingrese el id del artista ");
 
-        LocalDate inicio = ConsolaUtil.leerFecha("Ingrese la fecha de inicio del contrato");
+        LocalDate inicio = ConsolaUtil.leerFecha("Ingrese la fecha de inicio del contrato ");
 
-        LocalDate fin = ConsolaUtil.leerFecha("Ingrese la fecha fin del contrato");
+        LocalDate fin = ConsolaUtil.leerFecha("Ingrese la fecha fin del contrato ");
 
-        double regalias = ConsolaUtil.leerDecimal("Ingrese el porcentaje de regalias");
+        double regalias = ConsolaUtil.leerDecimal("Ingrese el porcentaje de regalias ");
 
         sello.firmarContrato(idArtista, inicio, fin, regalias);
 
@@ -71,12 +72,54 @@ public class MenuContratos extends Menu{
         }
     }
 
-    private void rescindirContrato(){
+    private void rescindirContrato() throws SQLException, ContratoVencidoException {
+        System.out.println("\n========== RESCINDIR CONTRATO ==========");
+
+        int idContrato = ConsolaUtil.leerEntero("Ingrese el Id del contrato a rescindir: ");
+
+        Contrato contrato = buscarContratoPorId(idContrato);
+        if(contrato == null)
+        {
+            System.out.println("No se encontró ningún contrato con el ID " + idContrato);
+
+            return;
+        }
+
+        contrato.rescindir();
+
+        System.out.println("El contrato " + idContrato + "fue rescindido exitosamente");
+
+
 
     }
-    private void calcularRegalias(){
+    private void calcularRegalias() throws Exception {
+        System.out.println("\n========== CALCULAR REGALÍAS ==========");
 
+        int idContrato = ConsolaUtil.leerEntero ("Ingrese el ID del contrato: ");
+
+        sello.calcularRegalias(idContrato);
+
+        System.out.println();
+
+
+
+    }
+
+    private Contrato buscarContratoPorId(int id) throws SQLException {
+        List<Contrato> lista = sello.listarContratos();
+        for (Contrato c : lista) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
     }
 
 
 }
+
+
+
+
+
+
