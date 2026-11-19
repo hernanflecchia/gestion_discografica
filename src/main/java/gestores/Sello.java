@@ -88,6 +88,15 @@ public class Sello {
     }
 
     // Lanzamientos
+    // Si el lanzamiento es un álbum que está de gira, devuelve la copia en memoria (la que tiene los shows).
+    // Si no, devuelve el mismo lanzamiento que vino de la base.
+    private Lanzamiento conShows(Lanzamiento lanzamiento) {
+        if (albumesEnGira.existe(lanzamiento.getId())) {
+            return albumesEnGira.buscarPorId(lanzamiento.getId());
+        }
+        return lanzamiento;
+    }
+
     // solo publica un artista activo con contrato vigente
     public void verificarPuedePublicar(Artista artista) throws Exception {
         verificarActivo(artista);
@@ -106,22 +115,21 @@ public class Sello {
     // Suma una venta al lanzamiento y la guarda.
     // Si el álbum está de gira, se usa la copia en memoria para que las dos queden iguales.
     public void registrarVenta(int lanzamientoId, int cantidad) throws Exception {
-        Lanzamiento lanzamiento;
-        if (albumesEnGira.existe(lanzamientoId)) {
-            lanzamiento = albumesEnGira.buscarPorId(lanzamientoId);   // la versión con shows
-        } else {
-            lanzamiento = lanzamientos.buscar(lanzamientoId);
-        }
+        Lanzamiento lanzamiento = conShows(lanzamientos.buscar(lanzamientoId));
         lanzamiento.registrarVenta(cantidad);
         lanzamientos.modificar(lanzamiento);
     }
 
     public Lanzamiento buscarLanzamiento(int id) throws SQLException {
-        return lanzamientos.buscar(id);
+        return conShows(lanzamientos.buscar(id));
     }
 
     public List<Lanzamiento> listarLanzamientos() throws SQLException {
-        return lanzamientos.listar();
+        List<Lanzamiento> lista = new ArrayList<>();
+        for (Lanzamiento lanzamiento : lanzamientos.listar()) {
+            lista.add(conShows(lanzamiento));
+        }
+        return lista;
     }
 
     // Regalías
@@ -135,10 +143,7 @@ public class Sello {
         }
         double importe = 0;
         for (Lanzamiento lanzamiento: lanzamientos.listarPorArtista(artista)) {
-            if (albumesEnGira.existe(lanzamiento.getId())) {
-                lanzamiento = albumesEnGira.buscarPorId(lanzamiento.getId());   // la versión con shows
-            }
-            importe += lanzamiento.calcularIngresos();
+            importe += conShows(lanzamiento).calcularIngresos();
         }
         return importe * contrato.getPorcentajeRegalias() / 100;
     }
