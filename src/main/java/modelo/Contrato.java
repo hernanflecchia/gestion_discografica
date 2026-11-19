@@ -194,14 +194,13 @@ public class Contrato implements Identificable {
 
     @Override
     public String toString() {
-        return "Contrato{" + "ID=" + id +
-                ", Artista=" + artista.getNombre() +
-                ", Fecha Inicio=" + fechaInicio +
-                ", Fecha Fin=" + fechaFin +
-                ", Porcentaje Regalias=" + porcentajeRegalias + "%"+
-                ", Estado=" + getEstado() +
-                '}';
+        return  "Contrato : " +
+                "\nID: " + id +
+                "\nArtista: " + artista.getNombre() +
+                "\nFecha Incio: " + fechaInicio +
+                "\nFecha Fin: " + fechaFin +
+                "\nPorcentaje Regalias: " + porcentajeRegalias + "%"+
+                "\nEstado: " + getEstado();
     }
-
 
 }
