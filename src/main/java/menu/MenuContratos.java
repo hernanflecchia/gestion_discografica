@@ -73,8 +73,10 @@ public class MenuContratos extends Menu{
             return;
         }
         for (Contrato contrato : lista) {
+            System.out.println("\n----------------------------------------");
             System.out.println(contrato);
         }
+        System.out.println("\nFin del listado.");
     }
 
     // Pide el id de un contrato y lo rescinde.
