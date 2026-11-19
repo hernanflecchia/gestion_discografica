@@ -95,15 +95,6 @@ public class MenuContratos extends Menu{
 
     }
 
-    private Contrato buscarContratoPorId(int id) throws SQLException {
-        List<Contrato> lista = sello.listarContratos();
-        for (Contrato c : lista) {
-            if (c.getId() == id) {
-                return c;
-            }
-        }
-        return null;
-    }
 
 
 }
