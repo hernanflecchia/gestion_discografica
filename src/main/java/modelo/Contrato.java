@@ -178,7 +178,7 @@ public class Contrato implements Identificable {
                 ", Fecha Inicio=" + fechaInicio +
                 ", Fecha Fin=" + fechaFin +
                 ", Porcentaje Regalias=" + porcentajeRegalias + "%"+
-                ", Estado=" + estado +
+                ", Estado=" + getEstado() +
                 '}';
     }
 
