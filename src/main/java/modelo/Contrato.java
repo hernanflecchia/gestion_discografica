@@ -6,6 +6,11 @@ import interfaces.Identificable;
 
 import java.time.LocalDate;
 
+/**
+ * Contrato entre el sello y un artista: tiene un período (inicio y fin)
+ * y el porcentaje de regalías que cobra el artista.
+ * El estado (vigente, vencido o rescindido) se recalcula según la fecha de hoy.
+ */
 public class Contrato implements Identificable {
 
     private int id;
@@ -16,6 +21,7 @@ public class Contrato implements Identificable {
     private EstadoContrato estado;
 
 
+    // Constructor para un contrato nuevo: nace VIGENTE y sin id (lo pone la base).
     public Contrato( Artista artista, LocalDate fechaInicio, LocalDate fechaFin, double porcentajeRegalias) {
        setArtista(artista);
        setFechaInicio(fechaInicio);
@@ -24,6 +30,7 @@ public class Contrato implements Identificable {
         this.estado=EstadoContrato.VIGENTE;
     }
 
+    // Constructor para recuperar un contrato que ya está guardado en la base.
     public Contrato( int id,Artista artista, LocalDate fechaInicio, LocalDate fechaFin, double porcentajeRegalias,EstadoContrato estado) {
         validarId(id);
         this.id=id;
@@ -55,6 +62,7 @@ public class Contrato implements Identificable {
     public double getPorcentajeRegalias() {
         return porcentajeRegalias;
     }
+    // Antes de devolver el estado lo actualiza, por si el contrato venció.
     public EstadoContrato getEstado() {
         actualizarEstado();
         return estado;
@@ -65,6 +73,7 @@ public class Contrato implements Identificable {
         this.id = id;
     }
 
+    // Asigna el id generado por la base; solo se puede hacer una vez.
     public void asignarId(int id){
         if(this.id != 0 ){
             throw new IllegalStateException("El contrato ya tiene un identificador asignado");
@@ -72,6 +81,7 @@ public class Contrato implements Identificable {
         validarId(id);
         this.id=id;
     }
+    // Todo contrato tiene que estar asociado a un artista.
     public void setArtista(Artista artista)
     {
      if(artista == null){
@@ -80,6 +90,7 @@ public class Contrato implements Identificable {
      this.artista=artista;
     }
 
+    // La fecha de inicio es obligatoria y tiene que ser anterior a la de fin.
     public void setFechaInicio(LocalDate fechaInicio) {
         if(fechaInicio == null)
         {
@@ -93,6 +104,7 @@ public class Contrato implements Identificable {
     }
 
 
+    // La fecha de fin es obligatoria y tiene que ser posterior a la de inicio.
     public void setFechaFin(LocalDate fechaFin)
     {
      if (fechaFin == null)
@@ -108,6 +120,7 @@ public class Contrato implements Identificable {
 
 
 
+    // El porcentaje tiene que ser mayor a 0 y como máximo 100.
     public void setPorcentajeRegalias(double porcentajeRegalias)
     {
         if(porcentajeRegalias <= 0 || porcentajeRegalias > 100)
@@ -131,6 +144,7 @@ public class Contrato implements Identificable {
 
 
 
+    // Está vigente si no fue rescindido y hoy está entre la fecha de inicio y la de fin.
     public boolean estaVigente() {
         actualizarEstado();
         LocalDate hoy = LocalDate.now();
@@ -139,6 +153,7 @@ public class Contrato implements Identificable {
                 && !hoy.isAfter(fechaFin);
     }
 
+    // El id tiene que ser mayor a cero.
     private void validarId(int id) {
         if (id <= 0)
         {
@@ -146,6 +161,8 @@ public class Contrato implements Identificable {
         }
     }
 
+    // Recalcula el estado según la fecha de hoy.
+    // Un contrato rescindido no cambia nunca más.
     public void actualizarEstado(){
 
         if (this.estado!= EstadoContrato.RESCINDIDO && this.fechaFin !=null)
@@ -159,6 +176,8 @@ public class Contrato implements Identificable {
         }
     }
 
+    // Corta el contrato antes de tiempo.
+    // No se puede rescindir uno vencido ni uno que ya estaba rescindido.
     public void rescindir() throws ContratoVencidoException
     {
         actualizarEstado();

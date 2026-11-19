@@ -7,9 +7,13 @@ import enums.TipoArtista;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Artista formado por varios integrantes.
+ * Además de los datos de Artista, guarda la lista de integrantes.
+ */
 public class Banda extends Artista {
 
-    private List<String> integrantes;
+    private List<String> integrantes;   // nombres de los integrantes
 
     // Constructor para una banda nueva
     public Banda(String nombre, String pais, List<String> integrantes) {
@@ -31,6 +35,8 @@ public class Banda extends Artista {
 
     // Setter con validaciones
 
+    // Tiene que haber al menos un integrante y ninguno puede estar vacío.
+    // Se guarda una copia nueva de la lista, con los nombres sin espacios de más.
     public void setIntegrantes(List<String> integrantes) {
         if (integrantes == null || integrantes.isEmpty()) {
             throw new IllegalArgumentException(
@@ -58,6 +64,7 @@ public class Banda extends Artista {
         return TipoArtista.BANDA;
     }
 
+    // Parte propia de la banda que se muestra en el toString de Artista.
     @Override
     public String descripcion() {
         return "Tipo de artista: Banda"

@@ -6,11 +6,17 @@ import modelo.Artista;
 
 import java.sql.SQLException;
 
+/**
+ * Gestor de artistas. Agrega la regla de que no puede haber
+ * dos artistas con el mismo nombre.
+ */
 public class GestorArtista extends Gestor<Artista> {
     public GestorArtista(Dao<Artista> dao) {
         super(dao);
     }
 
+    // Recorre los artistas guardados y avisa si el nombre ya está usado por otro.
+    // Compara sin importar mayúsculas y minúsculas.
     @Override
     protected void validar(Artista entidad) throws Exception {
         for (Artista artista: dao.buscarTodos()) {

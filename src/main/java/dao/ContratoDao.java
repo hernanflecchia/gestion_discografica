@@ -13,7 +13,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Guarda y lee contratos de la tabla "contrato".
+ * Usa ArtistaDao para cargar el artista de cada contrato.
+ */
 public class ContratoDao implements Dao<Contrato> {
+    // Consultas SQL que usa esta clase
     private static final String SQL_SELECT = "SELECT id, artista_id, fecha_inicio, fecha_fin, porcentaje_regalias, " +
             "estado FROM contrato";
     private static final String SQL_BUSCAR_CONTRATOS = SQL_SELECT + " ORDER BY fecha_inicio";
@@ -26,10 +31,11 @@ public class ContratoDao implements Dao<Contrato> {
             "UPDATE contrato SET fecha_inicio = ?, fecha_fin = ?, porcentaje_regalias = ?, " +
                     "estado = ? WHERE id = ?";
 
-    private final ArtistaDao artistaDao;
+    private final ArtistaDao artistaDao;   // para traer el artista de cada contrato
 
     public ContratoDao(ArtistaDao artistaDao) { this.artistaDao = artistaDao; }
 
+    // Guarda un contrato nuevo y le asigna el id que generó la base.
     @Override
     public void agregar(Contrato entidad) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion()) {
@@ -42,6 +48,7 @@ public class ContratoDao implements Dao<Contrato> {
                 ps.setDouble(4, entidad.getPorcentajeRegalias());
                 ps.setString(5, entidad.getEstado().name());
                 ps.executeUpdate();
+                // recupera el id generado por la base
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         entidad.setId(rs.getInt(1));
@@ -55,6 +62,7 @@ public class ContratoDao implements Dao<Contrato> {
         }
     }
 
+    // Borra el contrato con ese id; avisa si no existe.
     @Override
     public void eliminar(int id) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion();
@@ -66,6 +74,7 @@ public class ContratoDao implements Dao<Contrato> {
         }
     }
 
+    // Actualiza fechas, porcentaje y estado (por ejemplo, al rescindir).
     @Override
     public void modificar(Contrato entidad) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion()) {
@@ -88,6 +97,7 @@ public class ContratoDao implements Dao<Contrato> {
 
     }
 
+    // Busca un contrato por id, junto con su artista; avisa si no existe.
     @Override
     public Contrato buscar(int id) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion();
@@ -102,6 +112,9 @@ public class ContratoDao implements Dao<Contrato> {
         throw new EntidadNoEncontradaException("contrato", id);
     }
 
+    // Devuelve todos los contratos ordenados por fecha de inicio.
+    // Primero carga todos los artistas en un mapa (id -> artista)
+    // para no tener que consultar la base una vez por cada contrato.
     @Override
     public ArrayList<Contrato> buscarTodos() throws SQLException {
         Map<Integer, Artista> artistas = new HashMap<>();
@@ -121,6 +134,7 @@ public class ContratoDao implements Dao<Contrato> {
         return lista;
     }
 
+    // Arma un Contrato a partir de una fila de la tabla.
     private Contrato crearContrato(ResultSet rs, Artista artista) throws SQLException {
         int id = rs.getInt("id");
         LocalDate fechaInicio = rs.getDate("fecha_inicio").toLocalDate();

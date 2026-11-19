@@ -9,6 +9,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Menú de giras: agendar y cancelar shows de un álbum y ver las agendas.
+ * Los shows se guardan en memoria mientras el programa está abierto.
+ */
 public class MenuTours extends Menu {
     protected MenuTours(Sello sello) {
         super(sello);
@@ -29,6 +33,7 @@ public class MenuTours extends Menu {
         };
     }
 
+    // Llama al método que corresponde a cada opción.
     @Override
     protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {
@@ -39,23 +44,28 @@ public class MenuTours extends Menu {
         }
     }
 
+    // Pide álbum, fecha y ciudad, y agenda el show.
     private void agendarShow() throws SQLException {
         System.out.println("\n========== AGENDAR SHOW ===========");
         int idAlbum = ConsolaUtil.leerEntero("Ingrese el id del álbum: ");
+        sello.verificarEsAlbum(idAlbum);   // avisa antes de pedir fecha y ciudad
         LocalDate fecha = ConsolaUtil.leerFecha("Ingrese la fecha del show");
         String ciudad = ConsolaUtil.leerTexto("Ingrese el nombre de la ciudad del show: ");
         sello.agendarShow(idAlbum, fecha, ciudad);
         System.out.println("Show agendado exitosamente.");
     }
 
+    // Pide álbum y fecha, y cancela ese show.
     private void cancelarShow() throws SQLException {
         System.out.println("\n========== CANCELAR SHOW ===========");
         int idAlbum = ConsolaUtil.leerEntero("Ingrese el id del álbum: ");
+        sello.verificarTieneShows(idAlbum); // avisa antes de pedir fecha
         LocalDate fecha = ConsolaUtil.leerFecha("Ingrese fecha del show a cancelar");
         sello.cancelarShow(idAlbum, fecha);
         System.out.println("Show cancelado.");
     }
 
+    // Muestra los álbumes que tienen al menos un show agendado.
     private void listarAlbumesEnGira() {
         System.out.println("\n========== LISTAR ALBUMES EN GIRA ===========");
         List<Album> albumes = sello.listarAlbumesEnGira();
@@ -68,6 +78,7 @@ public class MenuTours extends Menu {
         }
     }
 
+    // Pide un álbum y muestra sus shows (fecha y ciudad).
     private void verAgendaAlbum() throws SQLException {
         System.out.println("\n========== VER AGENDA ALBUM ===========");
         int idAlbum = ConsolaUtil.leerEntero("Ingrese el id del álbum: ");

@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Menú de contratos: firmar, listar, rescindir y calcular regalías.
+ */
 public class MenuContratos extends Menu{
     protected MenuContratos(Sello sello) {
         super(sello);
@@ -26,6 +29,7 @@ public class MenuContratos extends Menu{
         return new String[]{"Nuevo.", "Listar.", "Rescindir.","Calcular Regalías."};
     }
 
+    // Llama al método que corresponde a cada opción.
     @Override
     protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {
@@ -36,6 +40,7 @@ public class MenuContratos extends Menu{
         }
     }
 
+    // Pide artista, fechas y porcentaje, y firma el contrato.
     private void nuevoContrato() throws Exception {
         System.out.println("\n========== NUEVO CONTRATO  ==========");
 
@@ -57,6 +62,7 @@ public class MenuContratos extends Menu{
     }
 
 
+    // Muestra todos los contratos con su estado actual.
     private void mostrarContratos() throws SQLException {
         System.out.println("\n========== LISTADO DE CONTRATOS ==========");
 
@@ -71,6 +77,7 @@ public class MenuContratos extends Menu{
         }
     }
 
+    // Pide el id de un contrato y lo rescinde.
     private void rescindirContrato() throws Exception {
         System.out.println("\n========== RESCINDIR CONTRATO ==========");
 
@@ -84,6 +91,7 @@ public class MenuContratos extends Menu{
 
 
     }
+    // Pide el id de un artista y muestra cuánto le corresponde de regalías.
     private void calcularRegalias() throws Exception {
         System.out.println("\n========== CALCULAR REGALÍAS ==========");
 
