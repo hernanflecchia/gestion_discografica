@@ -2,6 +2,7 @@ package dao;
 
 import config.Conexion;
 import enums.EstadoContrato;
+import excepciones.EntidadNoEncontradaException;
 import interfaces.Dao;
 import modelo.Artista;
 import modelo.Contrato;
@@ -47,7 +48,7 @@ public class ContratoDao implements Dao<Contrato> {
                     }
                 }
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
@@ -60,8 +61,7 @@ public class ContratoDao implements Dao<Contrato> {
              PreparedStatement ps = conn.prepareStatement(SQL_ELIMINAR)) {
             ps.setInt(1, id);
             if (ps.executeUpdate() == 0) {
-                // Acá debe ir una excepción propia que capture esto porque no es una SQLException
-                throw new SQLException("No existe el contrato con el id: " + id);
+                throw new EntidadNoEncontradaException("contrato", id);
             }
         }
     }
@@ -77,11 +77,10 @@ public class ContratoDao implements Dao<Contrato> {
                 ps.setString(4, entidad.getEstado().name());
                 ps.setInt(5, entidad.getId());
                 if (ps.executeUpdate() == 0) {
-                    // Acá debe ir una excepción propia que capture esto porque no es una SQLException
-                    throw new SQLException("No existe el contrato con el id: " + entidad.getId());
+                    throw new EntidadNoEncontradaException("contrato", entidad.getId());
                 }
                 conn.commit();
-            }  catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
@@ -96,12 +95,11 @@ public class ContratoDao implements Dao<Contrato> {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return crearContrato(rs, conn, artistaDao.buscar(rs.getInt("artista_id")));
+                    return crearContrato(rs, artistaDao.buscar(rs.getInt("artista_id")));
                 }
             }
         }
-        // Acá debe ir una excepción propia que capture esto porque no es una SQLException
-        throw new SQLException("No existe el contrato con el id: " + id);
+        throw new EntidadNoEncontradaException("contrato", id);
     }
 
     @Override
@@ -117,13 +115,13 @@ public class ContratoDao implements Dao<Contrato> {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Artista artista = artistas.get(rs.getInt("artista_id"));
-                lista.add(crearContrato(rs, conn, artista));
+                lista.add(crearContrato(rs, artista));
             }
         }
         return lista;
     }
 
-    private Contrato crearContrato(ResultSet rs, Connection conn, Artista artista) throws SQLException {
+    private Contrato crearContrato(ResultSet rs, Artista artista) throws SQLException {
         int id = rs.getInt("id");
         LocalDate fechaInicio = rs.getDate("fecha_inicio").toLocalDate();
         LocalDate fechaFin = rs.getDate("fecha_fin").toLocalDate();
