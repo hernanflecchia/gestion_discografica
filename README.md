@@ -6,9 +6,10 @@ Sistema de consola para administrar un sello discográfico: alta y consulta de a
 
 ## Diagrama UML
 
-![Diagrama UML del sistema](docs/uml.png)
+📄 [`docs/sello_discografico_uml_v3.pdf`](docs/sello_discografico_uml_v3.pdf): diagrama de clases, versión 3.
 
-> El diagrama original está en [`docs/Programacion II TP FINAL.docx`](docs/Programacion%20II%20TP%20FINAL.docx).
+- **Página 1 (Dominio):** `Artista`, `Solista`, `Banda`, `Lanzamiento`, `Single`, `Album`, `Cancion` y las interfaces `Identificable` y `Tourable`.
+- **Página 2 (Gestión):** `Sello`, `Repositorio<T>`, `Contrato` y los enums `EstadoContrato`, `EstadoArtista` y `Genero`.
 
 ## Tecnologías
 
@@ -40,7 +41,7 @@ Menús (consola)  →  Sello  →  Gestores  →  DAOs (JDBC)  →  MySQL
 
 ```
 gestion_discografica/
-├── docs/                    UML y consigna del TP
+├── docs/                    UML, consigna del TP y reglas de negocio
 ├── sql/
 │   ├── schema.sql           Base de datos, usuario y tablas
 │   └── datos.sql            Datos de prueba
@@ -48,8 +49,8 @@ gestion_discografica/
     ├── app/                 Main
     ├── config/              Conexion (datos de conexión JDBC)
     ├── dao/                 ArtistaDao, ContratoDao, LanzamientoDao
-    ├── enums/               EstadoArtista, EstadoContrato, Genero
-    ├── excepciones/         Excepciones propias del sistema
+    ├── enums/               EstadoArtista, EstadoContrato, Genero, TipoArtista, TipoLanzamiento
+    ├── excepciones/         Excepciones propias del sistema (5)
     ├── gestores/            Gestor<T>, GestorArtista, GestorContrato, GestorLanzamiento, Sello
     ├── interfaces/          Dao<T>, Identificable, Tourable
     ├── menu/                Menu (abstracta) y submenús
@@ -122,12 +123,12 @@ En Windows, el separador del classpath es `;` en lugar de `:`.
 
 | # | Requisito | Dónde se cumple |
 |---|---|---|
-| 1 | Diagrama UML | [`docs/uml.png`](docs/uml.png) |
+| 1 | Diagrama UML | [`docs/sello_discografico_uml_v3.pdf`](docs/sello_discografico_uml_v3.pdf) |
 | 2 | Herencia, polimorfismo, abstracción y encapsulamiento | `Artista` → `Solista`/`Banda`, `Lanzamiento` → `Single`/`Album`, `Menu` → submenús; atributos privados con setters que validan |
 | 3 | Mínimo 5 clases propias | Paquete `modelo`, gestores, `Sello`, menús |
 | 4 | Clase abstracta e interfaz implementadas | `Artista`, `Lanzamiento`, `Menu`, `Gestor<T>` / `Dao<T>`, `Identificable`, `Tourable` |
 | 5 | Listas o colecciones | `Banda.integrantes`, canciones de `Album`, `Repositorio<T>` |
-| 6 | Al menos 3 excepciones propias | Paquete `excepciones` |
+| 6 | Al menos 3 excepciones propias | Paquete `excepciones`: `ArtistaDuplicadoException`, `ContratoVencidoException`, `LanzamientoInvalidoException`, `EntidadNoEncontradaException` y `SinContratoVigenteException` |
 | 7 | Clase genérica | `Gestor<T extends Identificable>`, `Repositorio<T extends Identificable>` |
 | 8 | Persistencia JDBC en las clases principales | `ArtistaDao`, `ContratoDao`, `LanzamientoDao` |
 | 9 | Git y GitHub | Este repositorio |
@@ -136,14 +137,15 @@ En Windows, el separador del classpath es `;` en lugar de `:`.
 
 - `main`: versión estable que se entrega.
 - `dev`: integración. Los cambios llegan por pull request.
-- Una rama por integrante o por tarea, que se integra a `dev` mediante pull request.
+- Una rama por integrante, que se integra a `dev` mediante pull request.
 
 ## Integrantes
 
-| Integrante | Responsabilidades |
-|---|---|
-| Hernán Flecchia | `Repositorio<T>`, `Sello`, DAOs con JDBC, `schema.sql`, estructura del repositorio, `Main`, menús y `ConsolaUtil` |
-| _completar_ | _completar_ |
-| _completar_ | _completar_ |
+| Integrante | Área | Responsabilidades |
+|---|---|---|
+| Walter | Artistas | **Modelo:** `Artista` (abstracta), `Solista`, `Banda`, enums `EstadoArtista` y `TipoArtista`<br>**Excepciones:** `ArtistaDuplicadoException`<br>**Menús:** `MenuArtistas` |
+| Belén | Contratos | **Modelo:** `Contrato`, enum `EstadoContrato`<br>**Excepciones:** `ContratoVencidoException`<br>**Menús:** `MenuContratos`<br>**Excepciones:** `EntidadNoEncontradaException` y `SinContratoVigenteException`<br> |
+| Victoria | Lanzamientos | **Modelo:** `Lanzamiento`, `Single`, `Album`, `Cancion`, `Genero`, `TipoLanzamiento`, `Tourable` y `LanzamientoInvalidoException`<br>**Menú:** `MenuLanzamientos` |
+| Hernán | Infraestructura | **Núcleo:** `Repositorio<T>`, `Sello`, `Gestor<T>` y los gestores (`GestorArtista`, `GestorContrato`, `GestorLanzamiento`)<br>**Interfaces:** `Dao<T>` e `Identificable`Base de datos:`Conexion`, los DAO con JDBC (`ArtistaDao`, `ContratoDao`, `LanzamientoDao`), `schema.sql` y `datos.sql`<br>**Menús:** `Menu`, `MenuPrincipal` y `MenuTours`<br>**Proyecto:** el repositorio de GitHub (estructura de paquetes y ramas), `Main` y `ConsolaUtil` |
 
-Las notas de desarrollo que estaban antes en este README se movieron a [`docs/notas-desarrollo.md`](docs/notas-desarrollo.md).
+Las reglas de negocio, las funcionalidades y las decisiones de diseño están en [`docs/reglas-de-negocio.md`](docs/reglas-de-negocio.md).
