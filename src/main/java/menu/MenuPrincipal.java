@@ -34,7 +34,6 @@ public class MenuPrincipal extends Menu {
             case 2 -> new MenuLanzamientos(sello).mostrar();
             case 3 -> new MenuContratos(sello).mostrar();
             case 4 -> new MenuTours(sello).mostrar();
-            //case 4 -> mostrarRegalias();   // método privado de esta clase
         }
     }
 }

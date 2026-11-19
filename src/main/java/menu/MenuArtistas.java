@@ -46,7 +46,6 @@ public class MenuArtistas extends Menu {
             case 3 -> listar();
             case 4 -> buscar();
             case 5 -> darDeBaja();
-            default -> System.out.println("La opción seleccionada no es válida.");
         }
     }
 

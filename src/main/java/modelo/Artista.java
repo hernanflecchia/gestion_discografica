@@ -14,20 +14,20 @@ public abstract class Artista implements Identificable {
     public abstract TipoArtista getTipo();
 
     //constructor para nuevo artista
-    //No genero ID, queda en 0 (deberia ser generado al guardarse en la Base de Datos?)
+    //No genero ID, queda en 0 (debería ser generado al guardarse en la Base de Datos?)
     //El ID se asigna cuando se guarda en la base de datos.
 
     public Artista(String nombre, String pais) {
 
         setNombre(nombre);
-        setPais(pais);// lo hago de esta forma porque despues hago validacion del nombre y pais
+        setPais(pais);// lo hago de esta forma porque después hago validación del nombre y pais
         this.estado = EstadoArtista.ACTIVO;
     }
 
-    //constructor para recuperar un artista existente en based de datos
+    //constructor para recuperar un artista existente en base de datos
 
     public Artista(int id, String nombre, String pais, EstadoArtista estado) {
-        validarId(id);//hago llamada al metodo validarId
+        validarId(id);//hago llamada al método validarId
         this.id = id;
         setNombre(nombre);
         setPais(pais);

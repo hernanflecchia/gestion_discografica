@@ -83,7 +83,12 @@ public class Sello {
     }
 
     public void registrarVenta(int lanzamientoId, int cantidad) throws Exception {
-        Lanzamiento lanzamiento = lanzamientos.buscar(lanzamientoId);
+        Lanzamiento lanzamiento;
+        if (albumesEnGira.existe(lanzamientoId)) {
+            lanzamiento = albumesEnGira.buscarPorId(lanzamientoId);   // la versión con shows
+        } else {
+            lanzamiento = lanzamientos.buscar(lanzamientoId);
+        }
         lanzamiento.registrarVenta(cantidad);
         lanzamientos.modificar(lanzamiento);
     }
@@ -123,7 +128,7 @@ public class Sello {
         }
         Lanzamiento l = lanzamientos.buscar(lanzamientoId);
         if (!(l instanceof Album album)) {
-            throw new IllegalArgumentException("Solo los álbumes pueden salir de gira.");   // RN-T01
+            throw new IllegalArgumentException("Solo los álbumes pueden salir de gira.");
         }
         albumesEnGira.agregar(album);
         return album;

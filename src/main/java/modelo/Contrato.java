@@ -83,11 +83,11 @@ public class Contrato implements Identificable {
     public void setFechaInicio(LocalDate fechaInicio) {
         if(fechaInicio == null)
         {
-            throw  new IllegalArgumentException("La fecha de inicio no puede nula");
+            throw  new IllegalArgumentException("La fecha de inicio no puede ser nula");
         }
-        if(this.fechaFin != null && fechaInicio.isAfter(this.fechaFin))
+        if (this.fechaFin != null && !fechaInicio.isBefore(this.fechaFin))
         {
-            throw new IllegalArgumentException("La fecha inico no puede ser posterior a la fecha de inicio");
+            throw new IllegalArgumentException("La fecha inicio tiene que ser anterior a la fecha fin");
         }
         this.fechaInicio = fechaInicio;
     }
@@ -99,9 +99,9 @@ public class Contrato implements Identificable {
      {
          throw new IllegalArgumentException("La fecha fin no puede ser nula");
      }
-     if(this.fechaInicio != null && fechaFin.isBefore(this.fechaInicio))
+     if(this.fechaInicio != null && !fechaFin.isAfter(this.fechaInicio))
      {
-         throw  new IllegalArgumentException("La fecha fin no puede ser anterior a la fecha inicio");
+         throw  new IllegalArgumentException("La fecha fin tiene que ser posterior a la fecha inicio");
      }
         this.fechaFin = fechaFin;
     }
@@ -131,11 +131,14 @@ public class Contrato implements Identificable {
 
 
 
-    public boolean estaVigente(){
+    public boolean estaVigente() {
         actualizarEstado();
-        return this.estado == EstadoContrato.VIGENTE;
-
+        LocalDate hoy = LocalDate.now();
+        return this.estado == EstadoContrato.VIGENTE
+                && !hoy.isBefore(fechaInicio)
+                && !hoy.isAfter(fechaFin);
     }
+
     private void validarId(int id) {
         if (id <= 0)
         {
@@ -172,8 +175,7 @@ public class Contrato implements Identificable {
 
     @Override
     public String toString() {
-        return "Contrato" +
-                "ID=" + id +
+        return "Contrato{" + "ID=" + id +
                 ", Artista=" + artista.getNombre() +
                 ", Fecha Inicio=" + fechaInicio +
                 ", Fecha Fin=" + fechaFin +

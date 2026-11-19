@@ -57,9 +57,6 @@ public class MenuLanzamientos extends Menu {
             case 5:
                 registrarVenta();
                 break;
-            default:
-                System.out.println("La opción seleccionada no es válida.");
-                break;
         }
     }
 
@@ -86,9 +83,7 @@ public class MenuLanzamientos extends Menu {
                     new Cancion(tituloCancion, duracion));
             sello.publicarLanzamiento(single);
             System.out.println("\nSingle publicado:\n" + single);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            System.out.println("\nNo se pudo publicar el single: " + e.getMessage());
-        } catch (LanzamientoInvalidoException e) {
+        } catch (IllegalArgumentException | IllegalStateException | LanzamientoInvalidoException e) {
             System.out.println("\nNo se pudo publicar el single: " + e.getMessage());
         }
     }
@@ -124,9 +119,7 @@ public class MenuLanzamientos extends Menu {
 
             sello.publicarLanzamiento(album);
             System.out.println("\nÁlbum publicado:\n" + album);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            System.out.println("\nNo se pudo publicar el álbum: " + e.getMessage());
-        } catch (LanzamientoInvalidoException e) {
+        } catch (IllegalArgumentException | IllegalStateException | LanzamientoInvalidoException e) {
             System.out.println("\nNo se pudo publicar el álbum: " + e.getMessage());
         }
     }
