@@ -41,16 +41,16 @@ public class MenuTours extends Menu {
 
     private void agendarShow() throws SQLException {
         System.out.println("\n========== AGENDAR SHOW ===========");
-        int idAlbum = ConsolaUtil.leerEntero("Ingrese el id  del album: ");
+        int idAlbum = ConsolaUtil.leerEntero("Ingrese el id del álbum: ");
         LocalDate fecha = ConsolaUtil.leerFecha("Ingrese la fecha del show");
         String ciudad = ConsolaUtil.leerTexto("Ingrese el nombre de la ciudad del show: ");
         sello.agendarShow(idAlbum, fecha, ciudad);
-        System.out.println("Tour registrado exitosamente!");
+        System.out.println("Show agendado exitosamente.");
     }
 
     private void cancelarShow() throws SQLException {
         System.out.println("\n========== CANCELAR SHOW ===========");
-        int idAlbum = ConsolaUtil.leerEntero("Ingrese el id  del album: ");
+        int idAlbum = ConsolaUtil.leerEntero("Ingrese el id del álbum: ");
         LocalDate fecha = ConsolaUtil.leerFecha("Ingrese fecha del show a cancelar");
         sello.cancelarShow(idAlbum, fecha);
         System.out.println("Show cancelado.");
@@ -70,7 +70,7 @@ public class MenuTours extends Menu {
 
     private void verAgendaAlbum() throws SQLException {
         System.out.println("\n========== VER AGENDA ALBUM ===========");
-        int idAlbum = ConsolaUtil.leerEntero("Ingrese el id  del album: ");
+        int idAlbum = ConsolaUtil.leerEntero("Ingrese el id del álbum: ");
         Map<LocalDate, String> agenda = sello.verAgenda(idAlbum);
         if (agenda.isEmpty()) {
             System.out.println("El álbum no tiene shows agendados.");

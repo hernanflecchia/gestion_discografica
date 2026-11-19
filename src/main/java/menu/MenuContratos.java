@@ -23,7 +23,7 @@ public class MenuContratos extends Menu{
 
     @Override
     protected String[] opciones() {
-        return new String[]{"Nuevo.", "Listar.", " Rescindir.","Calcular Regalias."};
+        return new String[]{"Nuevo.", "Listar.", "Rescindir.","Calcular Regalías."};
     }
 
     @Override
@@ -33,7 +33,6 @@ public class MenuContratos extends Menu{
             case 2 -> mostrarContratos();
             case 3 -> rescindirContrato();
             case 4 -> calcularRegalias();
-            default -> System.out.println(" La opcion seleccionada no es valida");
         }
     }
 
@@ -80,7 +79,7 @@ public class MenuContratos extends Menu{
 
         sello.rescindirContrato(idContrato);
 
-        System.out.println("El contrato " + idContrato + "fue rescindido exitosamente");
+        System.out.println("El contrato " + idContrato + " fue rescindido exitosamente.");
 
 
 
