@@ -3,6 +3,7 @@ package dao;
 import config.Conexion;
 import enums.EstadoArtista;
 import enums.TipoArtista;
+import excepciones.EntidadNoEncontradaException;
 import interfaces.Dao;
 import modelo.Artista;
 import modelo.Banda;
@@ -62,7 +63,7 @@ public class ArtistaDao implements Dao<Artista> {
                     insertarIntegrantes(conn, b);
                 }
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
@@ -75,7 +76,7 @@ public class ArtistaDao implements Dao<Artista> {
              PreparedStatement ps = conn.prepareStatement(SQL_BAJA)) {
             ps.setInt(1, id);
             if (ps.executeUpdate() == 0) {
-                throw new SQLException("No existe el artista con el id: " + id);
+                throw new EntidadNoEncontradaException("artista", id);
             }
         }
     }
@@ -96,8 +97,7 @@ public class ArtistaDao implements Dao<Artista> {
                     }
                     ps.setInt(5, artista.getId());
                     if (ps.executeUpdate() == 0) {
-                        // Acá debe ir una excepción propia que capture esto porque no es una SQLException
-                        throw new SQLException("No existe el artista con el id: " + artista.getId());
+                        throw new EntidadNoEncontradaException("artista", artista.getId());
                     }
                 }
                 if (artista instanceof Banda b) {
@@ -108,7 +108,7 @@ public class ArtistaDao implements Dao<Artista> {
                     insertarIntegrantes(conn, b);
                 }
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
@@ -126,8 +126,7 @@ public class ArtistaDao implements Dao<Artista> {
                 }
             }
         }
-        // Acá debe ir una excepción propia que capture esto porque no es una SQLException
-        throw new SQLException("No existe el artista con el id: " + id);
+        throw new EntidadNoEncontradaException("artista", id);
     }
 
     @Override

@@ -2,6 +2,7 @@ package dao;
 
 import config.Conexion;
 import enums.Genero;
+import excepciones.EntidadNoEncontradaException;
 import interfaces.Dao;
 import modelo.*;
 
@@ -60,7 +61,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
                     insertarCanciones(conn, entidad);
                 }
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
@@ -73,8 +74,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
              PreparedStatement ps = conn.prepareStatement(SQL_ELIMINAR)) {
             ps.setInt(1, id);
             if (ps.executeUpdate() == 0) {
-                // Acá debe ir una excepción propia que capture esto porque no es una SQLException
-                throw new SQLException("No existe el lanzamiento con el id: " + id);
+                throw new EntidadNoEncontradaException("lanzamiento", id);
             }
         }
     }
@@ -92,8 +92,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
                     ps.setString(5, entidad.getGenero().name());
                     ps.setInt(6, entidad.getId());
                     if (ps.executeUpdate() == 0) {
-                        // Acá debe ir una excepción propia que capture esto porque no es una SQLException
-                        throw new SQLException("No existe el lanzamiento con el id: " + entidad.getId());
+                        throw new EntidadNoEncontradaException("lanzamiento", entidad.getId());
                     }
                 }
                 try (PreparedStatement ps = conn.prepareStatement(SQL_BORRAR_CANCIONES)) {
@@ -102,7 +101,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
                 }
                 insertarCanciones(conn, entidad);
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
@@ -120,8 +119,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
                 }
             }
         }
-        // Acá debe ir una excepción propia que capture esto porque no es una SQLException
-        throw new SQLException("No existe el lanzamiento con el id: " + id);
+        throw new EntidadNoEncontradaException("lanzamiento", id);
     }
 
     @Override
@@ -179,17 +177,17 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
         }
     }
 
-    private void insertarCanciones(Connection conn, Lanzamiento l) throws SQLException {
+    private void insertarCanciones(Connection conn, Lanzamiento lanzamiento) throws SQLException {
         List<Cancion> canciones = new ArrayList<>();
-        if (l instanceof Single s) {
+        if (lanzamiento instanceof Single s) {
             canciones.add(s.getCancion());
-        } else if (l instanceof Album a) {
+        } else if (lanzamiento instanceof Album a) {
             canciones.addAll(a.getCanciones());
         }
 
         try (PreparedStatement ps = conn.prepareStatement(SQL_INSERTAR_CANCION)) {
             for (Cancion c : canciones) {
-                ps.setInt(1, l.getId());
+                ps.setInt(1, lanzamiento.getId());
                 ps.setString(2, c.getTitulo());
                 ps.setInt(3, c.getDuracionSeg());
                 ps.executeUpdate();
