@@ -17,6 +17,10 @@ import java.util.List;
 
 //menu maneja singles y albums (llamando a Sello)
 
+/**
+ * Menú de lanzamientos: publicar singles y álbumes, listarlos,
+ * buscarlos y registrar ventas.
+ */
 public class MenuLanzamientos extends Menu {
 
     protected MenuLanzamientos(Sello sello) {
@@ -39,6 +43,7 @@ public class MenuLanzamientos extends Menu {
         };
     }
 
+    // Llama al método que corresponde a cada opción.
     @Override
     protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {
@@ -62,6 +67,8 @@ public class MenuLanzamientos extends Menu {
 
     // ---------------------------------------------------------------- publicar
 
+    // Elige el artista, verifica que pueda publicar, pide los datos
+    // del single y su canción, y lo publica.
     private void publicarSingle() throws Exception {
         System.out.println("\n========== PUBLICAR SINGLE ==========");
 
@@ -69,6 +76,9 @@ public class MenuLanzamientos extends Menu {
         if (artista == null) {
             return;
         }
+
+        // avisa antes de pedir los datos si el artista no puede publicar
+        sello.verificarPuedePublicar(artista);
 
         String titulo = ConsolaUtil.leerTexto("Título del single: ");
         LocalDate fecha = ConsolaUtil.leerFecha("Fecha de lanzamiento");
@@ -88,6 +98,8 @@ public class MenuLanzamientos extends Menu {
         }
     }
 
+    // Elige el artista, verifica que pueda publicar, pide los datos
+    // del álbum y sus canciones (hasta que se deja un título vacío), y lo publica.
     private void publicarAlbum() throws Exception {
         System.out.println("\n========== PUBLICAR ALBUM ==========");
 
@@ -97,6 +109,7 @@ public class MenuLanzamientos extends Menu {
             return;
         }
 
+        // avisa antes de pedir los datos si el artista no puede publicar
         sello.verificarPuedePublicar(artista);
 
         String titulo = ConsolaUtil.leerTexto("Título del álbum: ");
@@ -129,6 +142,7 @@ public class MenuLanzamientos extends Menu {
 
     //  listar y buscar lanzamientos
 
+    // Muestra todos los lanzamientos.
     private void mostrarLanzamientos() throws SQLException {
         System.out.println("\n========== LANZAMIENTOS ==========");
         List<Lanzamiento> lanzamientos = sello.listarLanzamientos();
@@ -142,6 +156,7 @@ public class MenuLanzamientos extends Menu {
         }
     }
 
+    // Pide un id y muestra el lanzamiento; si es un álbum, también sus canciones.
     private void buscar() throws SQLException {
         System.out.println("\n========== BUSCAR LANZAMIENTO ==========");
         int id = ConsolaUtil.leerEntero("ID del lanzamiento: ");
@@ -162,6 +177,7 @@ public class MenuLanzamientos extends Menu {
 
     // venta de lanzamientos
 
+    // Pide el lanzamiento y la cantidad vendida, registra la venta y muestra el total.
     private void registrarVenta() throws Exception {
         System.out.println("\n========== REGISTRAR VENTA ==========");
         int id = ConsolaUtil.leerEntero("ID del lanzamiento: ");
@@ -178,6 +194,8 @@ public class MenuLanzamientos extends Menu {
     }
 
 
+    // Muestra los artistas activos y pide elegir uno por id.
+    // Devuelve null (y avisa) si no hay activos o si el id no corresponde a uno activo.
     private Artista elegirArtista() throws SQLException {
         List<Artista> artistas = sello.listarArtistas();
 
@@ -204,6 +222,7 @@ public class MenuLanzamientos extends Menu {
         return null;
     }
 
+    // Muestra los géneros numerados y devuelve el elegido.
     private Genero elegirGenero() {
         Genero[] generos = Genero.values();
         System.out.println("Géneros disponibles:");
@@ -230,6 +249,7 @@ public class MenuLanzamientos extends Menu {
                     }
                 }
             } catch (NumberFormatException e) {
+                // si no es un número, se muestra el aviso de abajo y se vuelve a pedir
             }
             System.out.println("Formato inválido. Usá minutos:segundos, por ejemplo 3:30 "
                     + "(los segundos van de 00 a 59).");

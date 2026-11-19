@@ -4,6 +4,11 @@ import enums.EstadoArtista;
 import enums.TipoArtista;
 import interfaces.Identificable;
 
+/**
+ * Clase base de todos los artistas del sello.
+ * Es abstracta: no se crea un "Artista" suelto, sino un Solista o una Banda.
+ * Guarda los datos comunes (id, nombre, país y estado) y los valida.
+ */
 public abstract class Artista implements Identificable {
 
     private  int id;
@@ -11,12 +16,12 @@ public abstract class Artista implements Identificable {
     private String pais;
     private EstadoArtista estado;
 
+    // Cada subclase dice qué tipo de artista es (SOLISTA o BANDA).
     public abstract TipoArtista getTipo();
 
     //constructor para nuevo artista
     //No genero ID, queda en 0 (debería ser generado al guardarse en la Base de Datos?)
     //El ID se asigna cuando se guarda en la base de datos.
-
     public Artista(String nombre, String pais) {
 
         setNombre(nombre);
@@ -25,7 +30,6 @@ public abstract class Artista implements Identificable {
     }
 
     //constructor para recuperar un artista existente en base de datos
-
     public Artista(int id, String nombre, String pais, EstadoArtista estado) {
         validarId(id);//hago llamada al método validarId
         this.id = id;
@@ -34,10 +38,7 @@ public abstract class Artista implements Identificable {
         setEstado(estado);
     }
 
-
     //getters
-
-
     @Override
     public int getId() {
         return id;
@@ -54,8 +55,6 @@ public abstract class Artista implements Identificable {
     public EstadoArtista getEstado() {
         return estado;
     }
-
-    //setters
 
     //Setter del nombre con validacion (nombre vacio o carga de espacios)
     public void setNombre(String nombre) {
@@ -78,7 +77,6 @@ public abstract class Artista implements Identificable {
         this.pais = pais.trim();
     }
 
-
     //Setter del estado con validacion
 
     public void setEstado(EstadoArtista estado) {
@@ -87,21 +85,17 @@ public abstract class Artista implements Identificable {
                     "El estado no puede ser nulo."
             );
         }
-
         this.estado = estado;
     }
 
     // Implementación del metodo setId de Idntificable
     // El ID solamente puede asignarse una vez.
-
     @Override
     public void setId(int id) {
-
         asignarId(id);
     }
 
     // Asigna el ID generado por la Base de Datos.
-
     public void asignarId(int id) {
         if (this.id != 0) {
             throw new IllegalStateException(
@@ -113,9 +107,6 @@ public abstract class Artista implements Identificable {
         this.id = id;
     }
 
-    
-
-    //metodos
     //Validacion del ID
     private void validarId(int id) {
         if (id <= 0) {
@@ -125,12 +116,10 @@ public abstract class Artista implements Identificable {
         }
     }
 
-    //metodo abstracto
-
+    // Cada subclase agrega su descripción (nombre real, integrantes, etc.).
     public abstract String descripcion();
 
-    //to string
-
+    // Muestra los datos comunes y después la descripción de la subclase.
     @Override
     public String toString() {
         return "Artista: " +
@@ -140,7 +129,4 @@ public abstract class Artista implements Identificable {
                 "\nEstado: " + estado +
                 "\n" + descripcion();
     }
-
-
-
 }

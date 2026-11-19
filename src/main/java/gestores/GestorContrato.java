@@ -8,11 +8,16 @@ import modelo.Contrato;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Gestor de contratos. Agrega la regla de que un artista no puede tener
+ * dos contratos que se superpongan en fechas, y permite buscar su contrato vigente.
+ */
 public class GestorContrato extends Gestor<Contrato> {
     public GestorContrato(Dao<Contrato> dao) {
         super(dao);
     }
 
+    // Avisa si el artista ya tiene otro contrato (no rescindido) que pise esas fechas.
     @Override
     protected void validar(Contrato entidad) throws Exception {
         for (Contrato contrato: dao.buscarTodos()) {
@@ -27,6 +32,7 @@ public class GestorContrato extends Gestor<Contrato> {
         }
     }
 
+    // Devuelve el contrato vigente del artista, o null si no tiene ninguno.
     public Contrato buscarVigente(Artista entidad) throws Exception {
         for (Contrato contrato: dao.buscarTodos()) {
             if (contrato.getArtista().getId() == entidad.getId() && contrato.estaVigente()) {

@@ -4,6 +4,10 @@ package modelo;
 import enums.EstadoArtista;
 import enums.TipoArtista;
 
+/**
+ * Artista que trabaja solo.
+ * Además de los datos de Artista, guarda su nombre real.
+ */
 public class Solista extends Artista {
 
     private String nombreReal;

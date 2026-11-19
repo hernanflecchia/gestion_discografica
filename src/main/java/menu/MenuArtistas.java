@@ -38,6 +38,7 @@ public class MenuArtistas extends Menu {
         };
     }
 
+    // Llama al método que corresponde a cada opción.
     @Override
     protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {
@@ -50,7 +51,8 @@ public class MenuArtistas extends Menu {
     }
 
     // alta solista
-    
+
+    // Pide los datos del solista, lo crea y lo guarda.
     private void altaSolista() throws Exception {
         System.out.println("\n========== ALTA DE SOLISTA ==========");
         System.out.println("Ingresá los datos solicitados.");
@@ -62,7 +64,7 @@ public class MenuArtistas extends Menu {
 
         try {
             Solista solista = new Solista(nombre, pais, nombreReal);
-            
+
             sello.altaArtista(solista);
 
             System.out.println("\nSolista guardado correctamente:");
@@ -72,7 +74,9 @@ public class MenuArtistas extends Menu {
         }
     }
 
-  
+
+    // Pide los datos de la banda y sus integrantes (hasta que se deja uno vacío),
+    // la crea y la guarda.
     private void altaBanda() throws Exception {
         System.out.println("\n========== ALTA DE BANDA ==========");
         System.out.println("Ingresá los datos generales de la banda.");
@@ -80,7 +84,7 @@ public class MenuArtistas extends Menu {
 
         String nombre = ConsolaUtil.leerTexto("Nombre de la banda: ");
         String pais = ConsolaUtil.leerTexto("País de origen: ");
-        
+
         List<String> integrantes = new ArrayList<>();
         System.out.println("\nCargá los integrantes. Dejá el nombre vacío para terminar.");
         int numero = 1;
@@ -107,7 +111,8 @@ public class MenuArtistas extends Menu {
     }
 
     //  listar y buscar
-    
+
+    // Muestra todos los artistas (activos e inactivos).
     private void listar() throws SQLException {
         System.out.println("\n========== LISTADO DE ARTISTAS ==========");
 
@@ -119,7 +124,7 @@ public class MenuArtistas extends Menu {
         }
 
         System.out.println("Cantidad de artistas encontrados: " + lista.size());
-        
+
         for (Artista artista : lista) {
             System.out.println("\n----------------------------------------");
             System.out.println(artista);
@@ -127,7 +132,8 @@ public class MenuArtistas extends Menu {
 
         System.out.println("\nFin del listado.");
     }
-    
+
+    // Pide un id y muestra los datos de ese artista.
     private void buscar() throws SQLException {
         System.out.println("\n========== BUSCAR ARTISTA ==========");
         System.out.println("Podés ver los IDs en la opción Listar artistas.\n");
@@ -159,6 +165,7 @@ public class MenuArtistas extends Menu {
             return;
         }
 
+        // muestra el artista y pide confirmación antes de darlo de baja
         System.out.println("\n" + artista);
         String respuesta = ConsolaUtil.leerTexto("\n¿Confirmás la baja? (s/n): ");
         if (!respuesta.equalsIgnoreCase("s")) {

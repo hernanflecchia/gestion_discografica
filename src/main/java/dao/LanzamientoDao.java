@@ -13,7 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Guarda y lee lanzamientos de la base de datos.
+ * Singles y álbumes van en la misma tabla "lanzamiento" (la columna "tipo" dice cuál es).
+ * Las canciones van en la tabla "cancion".
+ * Usa ArtistaDao para cargar el artista de cada lanzamiento.
+ */
 public class LanzamientoDao implements Dao<Lanzamiento> {
+    // Consultas SQL que usa esta clase
     private static final String SQL_BUSCAR_CANCIONES =
             "SELECT titulo, duracion_seg FROM cancion WHERE lanzamiento_id = ? ORDER BY id";
     private static final String SQL_SELECT = "SELECT id, artista_id, titulo, fecha, precio, " +
@@ -32,12 +39,14 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
     private static final String SQL_BORRAR_CANCIONES =
             "DELETE FROM cancion WHERE lanzamiento_id = ?";
 
-    private final ArtistaDao artistaDao;
+    private final ArtistaDao artistaDao;   // para traer el artista de cada lanzamiento
 
     public LanzamientoDao(ArtistaDao artistaDao) {
         this.artistaDao = artistaDao;
     }
 
+    // Guarda un lanzamiento nuevo con sus canciones y le asigna el id que generó la base.
+    // Todo va en una transacción: si algo falla, no queda nada guardado a medias.
     @Override
     public void agregar(Lanzamiento entidad) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion()) {
@@ -53,6 +62,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
                     ps.setString(6, entidad.getTipo().name());
                     ps.setString(7, entidad.getGenero().name());
                     ps.executeUpdate();
+                    // recupera el id generado por la base
                     try (ResultSet rs = ps.getGeneratedKeys()) {
                         if (rs.next()) {
                             entidad.setId(rs.getInt(1));
@@ -68,6 +78,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
         }
     }
 
+    // Borra el lanzamiento; sus canciones se borran solas (ON DELETE CASCADE).
     @Override
     public void eliminar(int id) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion();
@@ -79,6 +90,8 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
         }
     }
 
+    // Actualiza los datos del lanzamiento (por ejemplo, las unidades vendidas)
+    // y vuelve a guardar sus canciones.
     @Override
     public void modificar(Lanzamiento entidad) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion()) {
@@ -108,6 +121,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
         }
     }
 
+    // Busca un lanzamiento por id, con su artista y sus canciones; avisa si no existe.
     @Override
     public Lanzamiento buscar(int id) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion();
@@ -122,6 +136,9 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
         throw new EntidadNoEncontradaException("lanzamiento", id);
     }
 
+    // Devuelve todos los lanzamientos ordenados por título.
+    // Primero carga todos los artistas en un mapa (id -> artista)
+    // para no tener que consultar la base una vez por cada lanzamiento.
     @Override
     public ArrayList<Lanzamiento> buscarTodos() throws SQLException {
         Map<Integer, Artista> artistas = new HashMap<>();
@@ -141,6 +158,8 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
         return lista;
     }
 
+    // Arma un Single o un Album a partir de una fila de la tabla, según la columna "tipo",
+    // y le carga sus canciones y las unidades vendidas.
     private Lanzamiento crearLanzamiento(ResultSet rs, Connection conn, Artista artista) throws SQLException {
         int id = rs.getInt("id");
         String titulo = rs.getString("titulo");
@@ -151,6 +170,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
 
         Lanzamiento l;
         if (rs.getString("tipo").equals("SINGLE")) {
+            // el single tiene una sola canción
             l = new Single(id, titulo, fecha, precio, genero, artista, canciones.getFirst());
         } else {
             Album album = new Album(id, titulo, fecha, precio, genero, artista);
@@ -163,6 +183,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
         return l;
     }
 
+    // Trae las canciones de un lanzamiento, en el orden en que se cargaron.
     private List<Cancion> buscarCanciones(Connection conn, int lanzamientoId) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(SQL_BUSCAR_CANCIONES)) {
             ps.setInt(1, lanzamientoId);
@@ -177,6 +198,7 @@ public class LanzamientoDao implements Dao<Lanzamiento> {
         }
     }
 
+    // Guarda las canciones del lanzamiento: la única del single o todas las del álbum.
     private void insertarCanciones(Connection conn, Lanzamiento lanzamiento) throws SQLException {
         List<Cancion> canciones = new ArrayList<>();
         if (lanzamiento instanceof Single s) {

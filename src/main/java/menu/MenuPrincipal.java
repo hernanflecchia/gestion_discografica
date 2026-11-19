@@ -2,16 +2,21 @@ package menu;
 
 import gestores.Sello;
 
+/**
+ * Menú con el que arranca el programa. Lleva a cada submenú.
+ */
 public class MenuPrincipal extends Menu {
     public MenuPrincipal(Sello sello) {
         super(sello);
     }
 
+    // Al volver de un submenú no hace falta pausar.
     @Override
     protected boolean pausarDespuesDeEjecutar() {
         return false;
     }
 
+    // En el menú principal, la opción 0 cierra el programa.
     @Override
     protected String textoSalida() {
         return "Salir";
@@ -27,6 +32,7 @@ public class MenuPrincipal extends Menu {
         return new String[]{"Artistas.", "Lanzamientos.", "Contratos.", "Tours."};
     }
 
+    // Abre el submenú elegido.
     @Override
     protected void ejecutar(int opcion) throws Exception {
         switch (opcion) {

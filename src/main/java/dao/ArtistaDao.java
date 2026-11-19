@@ -16,7 +16,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Guarda y lee artistas de la base de datos.
+ * Solistas y bandas van en la misma tabla "artista" (la columna "tipo" dice cuál es).
+ * Los integrantes de las bandas van en la tabla "banda_integrante".
+ */
 public class ArtistaDao implements Dao<Artista> {
+    // Consultas SQL que usa esta clase
     private static final String SQL_SELECT =
             "SELECT id, tipo, nombre, pais, estado, nombre_real FROM artista";
     private static final String SQL_BUSCAR_ARTISTAS =
@@ -36,6 +42,9 @@ public class ArtistaDao implements Dao<Artista> {
     private static final String SQL_INSERTAR_INTEGRANTE =
             "INSERT INTO banda_integrante (artista_id, nombre) VALUES (?, ?)";
 
+    // Guarda un artista nuevo y le asigna el id que generó la base.
+    // Si es una banda, también guarda sus integrantes.
+    // Todo va en una transacción: si algo falla, no queda nada guardado a medias.
     @Override
     public void agregar(Artista entidad) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion()) {
@@ -47,12 +56,14 @@ public class ArtistaDao implements Dao<Artista> {
                     ps.setString(2, entidad.getNombre());
                     ps.setString(3, entidad.getPais());
                     ps.setString(4, entidad.getEstado().name());
+                    // solo los solistas tienen nombre real
                     if (entidad instanceof Solista) {
                         ps.setString(5, ((Solista) entidad).getNombreReal());
                     } else {
                         ps.setNull(5, java.sql.Types.VARCHAR);
                     }
                     ps.executeUpdate();
+                    // recupera el id generado por la base
                     try (ResultSet rs = ps.getGeneratedKeys()) {
                         if (rs.next()) {
                             entidad.asignarId(rs.getInt(1));
@@ -70,6 +81,7 @@ public class ArtistaDao implements Dao<Artista> {
         }
     }
 
+    // Baja lógica: no borra el artista, lo pasa a INACTIVO.
     @Override
     public void eliminar(int id) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion();
@@ -81,6 +93,8 @@ public class ArtistaDao implements Dao<Artista> {
         }
     }
 
+    // Actualiza los datos del artista. Si es una banda, borra los integrantes
+    // y los vuelve a cargar con la lista actual.
     @Override
     public void modificar(Artista artista) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion()) {
@@ -115,6 +129,7 @@ public class ArtistaDao implements Dao<Artista> {
         }
     }
 
+    // Busca un artista por id; avisa si no existe.
     @Override
     public Artista buscar(int id) throws SQLException {
         try (Connection conn = Conexion.obtenerConexion();
@@ -129,6 +144,7 @@ public class ArtistaDao implements Dao<Artista> {
         throw new EntidadNoEncontradaException("artista", id);
     }
 
+    // Devuelve todos los artistas ordenados por nombre.
     @Override
     public ArrayList<Artista> buscarTodos() throws SQLException {
         ArrayList<Artista> lista = new ArrayList<>();
@@ -143,6 +159,7 @@ public class ArtistaDao implements Dao<Artista> {
         return lista;
     }
 
+    // Arma un Solista o una Banda a partir de una fila de la tabla, según la columna "tipo".
     private Artista crearArtista(ResultSet rs, Connection conn) throws SQLException {
         int id = rs.getInt("id");
         String nombre = rs.getString("nombre");
@@ -155,6 +172,7 @@ public class ArtistaDao implements Dao<Artista> {
         return new Banda(id, nombre, pais, estado, buscarIntegrantes(conn, id));
     }
 
+    // Trae los nombres de los integrantes de una banda.
     private List<String> buscarIntegrantes(Connection conn, int artistaId) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(SQL_BUSCAR_INTEGRANTES)) {
             ps.setInt(1, artistaId);
@@ -168,6 +186,7 @@ public class ArtistaDao implements Dao<Artista> {
         }
     }
 
+    // Guarda los integrantes de una banda.
     private void insertarIntegrantes(Connection conn, Banda b) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(SQL_INSERTAR_INTEGRANTE)) {
             for (String integrante : b.getIntegrantes()) {
