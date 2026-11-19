@@ -148,6 +148,7 @@ public class MenuArtistas extends Menu {
      * firmar contratos ni publicar lanzamientos.
      * @throws SQLException si no existe el artista o falla la operación
      */
+
     private void darDeBaja() throws SQLException {
         System.out.println("\n========== BAJA DE ARTISTA ==========");
 
@@ -169,4 +170,5 @@ public class MenuArtistas extends Menu {
         sello.bajaArtista(id);
         System.out.println(artista.getNombre() + " fue dado de baja (pasó a INACTIVO).");
     }
+
 }

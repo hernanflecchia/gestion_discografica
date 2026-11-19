@@ -37,4 +37,13 @@ public class Repositorio<T extends Identificable> {
     public void eliminar(int id) {
         items.remove(buscarPorId(id));      // reutiliza buscarPorId, que ya avisa si no existe
     }
+
+    public boolean existe(int id) {
+        for (T item : items) {
+            if (item.getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
