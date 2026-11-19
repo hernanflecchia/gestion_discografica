@@ -1,13 +1,18 @@
 package gestores;
 
 import enums.EstadoArtista;
+import modelo.Album;
 import modelo.Artista;
 import modelo.Contrato;
 import modelo.Lanzamiento;
 
+import repositorio.Repositorio;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Sello {
     private String nombre;
@@ -39,6 +44,11 @@ public class Sello {
         artistas.baja(id);
     }
 
+    public List<Artista> listarArtistas() throws SQLException {
+        return artistas.listar();
+
+    }
+
     // Contratos
     public void firmarContrato(int artistaId, LocalDate inicio, LocalDate fin, double porcentaje) throws Exception {
         Artista artista = artistas.buscar(artistaId);
@@ -54,6 +64,10 @@ public class Sello {
         contrato.rescindir();
         // guarda el estado RESCINDIDO en la BD
         contratos.modificar(contrato);
+    }
+
+    public List<Contrato> listarContratos() throws SQLException {
+        return contratos.listar();
     }
 
     // Lanzamientos
@@ -78,6 +92,10 @@ public class Sello {
         return lanzamientos.buscar(id);
     }
 
+    public List<Lanzamiento> listarLanzamientos() throws SQLException {
+        return lanzamientos.listar();
+    }
+
     // Regalías
     public double calcularRegalias(int artistaId) throws Exception {
         Artista artista = artistas.buscar(artistaId);
@@ -87,20 +105,52 @@ public class Sello {
         }
         double importe = 0;
         for (Lanzamiento lanzamiento: lanzamientos.listarPorArtista(artista)) {
+            if (albumesEnGira.existe(lanzamiento.getId())) {
+                lanzamiento = albumesEnGira.buscarPorId(lanzamiento.getId());   // la versión con shows
+            }
             importe += lanzamiento.calcularIngresos();
         }
         return importe * contrato.getPorcentajeRegalias() / 100;
     }
 
-    public List<Artista> listarArtistas() throws SQLException {
-        return artistas.listar();
+    // Tours
+    private final Repositorio<Album> albumesEnGira = new Repositorio<>();
 
-    }
-    public List<Lanzamiento> listarLanzamientos() throws SQLException {
-        return lanzamientos.listar();
+    // Devuelve el álbum en memoria; si todavía no está, lo trae de la BD y lo guarda
+    private Album obtenerAlbum(int lanzamientoId) throws SQLException {
+        if (albumesEnGira.existe(lanzamientoId)) {
+            return albumesEnGira.buscarPorId(lanzamientoId);
+        }
+        Lanzamiento l = lanzamientos.buscar(lanzamientoId);
+        if (!(l instanceof Album album)) {
+            throw new IllegalArgumentException("Solo los álbumes pueden salir de gira.");   // RN-T01
+        }
+        albumesEnGira.agregar(album);
+        return album;
     }
 
-    public List<Contrato> listarContratos() throws SQLException {
-        return contratos.listar();
+    public void agendarShow(int albumId, LocalDate fecha, String ciudad) throws SQLException {
+        obtenerAlbum(albumId).agendarTour(fecha, ciudad);
+    }
+
+    public void cancelarShow(int albumId, LocalDate fecha) {
+        if (!albumesEnGira.existe(albumId)) {
+            throw new IllegalArgumentException("El lanzamiento " + albumId + " no tiene shows agendados.");
+        }
+        albumesEnGira.buscarPorId(albumId).cancelarTour(fecha);
+    }
+
+    public Map<LocalDate, String> verAgenda(int albumId) throws SQLException {
+        return obtenerAlbum(albumId).getAgendaTour();
+    }
+
+    public List<Album> listarAlbumesEnGira() {
+        List<Album> enGira = new ArrayList<>();
+        for (Album album : albumesEnGira.listar()) {
+            if (!album.getAgendaTour().isEmpty()) {
+                enGira.add(album);
+            }
+        }
+        return enGira;
     }
 }
